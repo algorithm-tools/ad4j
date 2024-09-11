@@ -1,9 +1,10 @@
 package org.algorithm.ad4j.model;
 
-import com.alibaba.fastjson.JSONObject;
 import org.algorithm.ad4j.engine.AnomalyDetectionEngine;
-import org.algorithm.ad4j.model.adm.*;
-import org.algorithm.ad4j.pojo.*;
+import org.algorithm.ad4j.pojo.AnomalyDetectionLog;
+import org.algorithm.ad4j.pojo.AnomalyDetectionResult;
+import org.algorithm.ad4j.pojo.IndicatorInfo;
+import org.algorithm.ad4j.pojo.IndicatorSeries;
 import org.algorithm.ad4j.utils.IndicatorSeriesUtil;
 import org.algorithm.chart.JFreeChartUtil;
 import org.junit.After;
