@@ -1,12 +1,12 @@
 package org.algorithm.ad4j.engine;
 
+import com.sun.istack.internal.NotNull;
 import org.algorithm.ad4j.model.adm.*;
 import org.algorithm.ad4j.pojo.*;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class AnomalyDetectionEngine {
         admMap.values().forEach(v -> v.init(context));
     }
 
-    public AnomalyDetectionResult detect(@Nonnull IndicatorInfo indicatorInfo) {
+    public AnomalyDetectionResult detect(@NotNull IndicatorInfo indicatorInfo) {
         if (CollectionUtils.isEmpty(indicatorInfo.getIndicatorSeries())) {
             return null;
         }

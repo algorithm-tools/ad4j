@@ -6,7 +6,8 @@ import org.algorithm.ad4j.pojo.AnomalyDetectionLog;
 import org.algorithm.ad4j.pojo.IndicatorEvaluateInfo;
 import org.algorithm.ad4j.pojo.IndicatorSeries;
 import org.algorithm.ad4j.utils.IndicatorSeriesComparator;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
+
 
 import java.util.List;
 import java.util.stream.Collectors;

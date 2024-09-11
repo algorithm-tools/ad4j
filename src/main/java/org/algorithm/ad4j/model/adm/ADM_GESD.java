@@ -5,7 +5,7 @@ import org.algorithm.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithm.ad4j.pojo.AnomalyDetectionLog;
 import org.algorithm.ad4j.pojo.IndicatorEvaluateInfo;
 import org.algorithm.ad4j.pojo.IndicatorSeries;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.math3.distribution.TDistribution;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
