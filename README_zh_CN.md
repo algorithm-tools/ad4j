@@ -6,26 +6,26 @@
 [![EN doc](https://img.shields.io/badge/document-English-blue.svg?style=socialflat-square&)](README.md)
 
 
-## Introduction
-> Java implemented anomaly monitoring algorithm library.
+## 简介
+> Java 实现的异常监测算法库。
 
-AnomalyDetection Java is an anomaly detection algorithm library based on statistical and machine learning approaches, implemented in Java. It can be easily embedded in actual business to monitor various types of anomalies in data sequences, including outlier anomalies, fluctuation anomalies, trend anomalies, and so on.
+AnomalyDetection-Java是一个基于统计学、机器学习等思路实现的异常检测算法库，使用java实现。可以很方便的嵌入实际业务中，对数据序列进行多种异常类型的监测包括：离群值异常、波动异常、趋势异常等类型。
 
-## Feature
+## 特性
 
-Its main feature are as follows:
+主要包含如下特性:
 
-- Depends on JDK environment and common-math3 library, and conducts graphical testing samples through JFreeChart.
-- High scalability: The architecture is very simple. Developers can flexibly and efficiently add business domain anomaly detection rules, or add other types of algorithms.
-- The following monitoring algorithms are currently supported:
+- 依赖JDK环境和common-math3库，并通过JFreeChart进行图形化测试样例。
+- 高扩展性：架构十分简单。开发者可以灵活高效的增加业务域异常检测规则，或者增加其他类型的算法。
+- 当前支持如下监测算法：
 
-  |Exception type | Algorithm | Principle | Limitation|
+  | 异常类型  |算法|原理| 限制      |
   |----|----|----|----|
-  |Absolute value anomaly | GESD | Calculate generalized extreme student bias statistic to find outliers | Apply normal distribution|
-  |Absolute value anomaly | Quantile | Quantile based statistical algorithm | Applicable to all distributions|
-  |Abnormal fluctuations | 2nd derivative+distance | Finding MBP based on second derivative and distance | Normal and non normal distributions of inflection points|
-  |Trend anomaly | Mann Kendall | Based on Mann Kendall test | Applicable to all distributions|
-  |Threshold anomaly | Threshold rule engine | Based on business threshold rules | Applicable to all distributions|
+  | 绝对值异常 |GESD|计算广义极端学生化偏差统计量寻找异常点| 适用正态分布 |
+  | 绝对值异常 | Quantile |  基于分位统计算法   | 适用所有分布  |
+  | 波动异常  | 2阶导+距离 |  基于二阶导数和距离寻找MBP | 拐点存在的正态、非正态分布 |
+  | 趋势异常  | Mann-Kendall |  基于MannKendall检验 | 适用所有分布 |
+  | 阈值异常   | 阈值规则引擎 |  基于业务阈值规则 | 适用所有分布 |
 
 
 # Use case
@@ -42,4 +42,5 @@ Its main feature are as follows:
 ==============Anomaly Detection Result End=========
 click Enter to close window...
 ```
-More monitoring algorithms are being added, welcome to co build.
+
+更多监测算法加入中，欢迎加入共建！
