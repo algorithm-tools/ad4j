@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * IndicatorSeriesUtil
- * @author mym
- */
 public class IndicatorSeriesUtil {
 
     public static List<IndicatorSeries> transferFromArray(@NotNull double[] array){
