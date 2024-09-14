@@ -5,6 +5,7 @@ import org.algorithm.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithm.ad4j.pojo.AnomalyDetectionLog;
 import org.algorithm.ad4j.pojo.IndicatorEvaluateInfo;
 import org.algorithm.ad4j.pojo.IndicatorSeries;
+import org.algorithm.ad4j.utils.IndicatorCalculateUtil;
 
 import java.util.List;
 
@@ -23,12 +24,12 @@ public class ADM_MannKendall extends AbstractADM {
 
     @Override
     public void init(AnomalyDetectionContext context) {
-        this.criticalZ = 1.96; // 显著性水平 P=0.05 对应的 Z 临界值（通过查标准正态分布表查的）
+        this.criticalZ = 1.96; // 显著性水平 P=0.05 对应的 Z 临界值（查标准正态分布表）
     }
 
     @Override
-    public IndicatorEvaluateInfo evaluate(List<IndicatorSeries> indicatorSeries, AnomalyDetectionLog log) {
-        // TODO 剔除离群点（事先剔除？）
+    public IndicatorEvaluateInfo evaluate(List<IndicatorSeries> data, AnomalyDetectionLog log) {
+        List<IndicatorSeries> indicatorSeries = IndicatorCalculateUtil.excludeOutlier(data);
 
         MannKendallResult mannKendallResult = mannKendall(indicatorSeries, log);
 

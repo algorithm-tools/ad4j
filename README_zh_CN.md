@@ -44,3 +44,18 @@ click Enter to close window...
 ```
 
 更多监测算法加入中，欢迎加入共建！
+
+# 参与贡献
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/algorithm-tools/AnomalyDetection-Java/pulls)
+
+欢迎加入共建共赢.
+
+感谢所有做出贡献的人！
+
+[![Contributors](https://contrib.rocks/image?repo=algorithm-tools/AnomalyDetection-Java)](https://github.com/algorithm-tools/AnomalyDetection-Java/graphs/contributors)
+
+
+# 获得帮助
+
+- 创建 issue，并描述清晰

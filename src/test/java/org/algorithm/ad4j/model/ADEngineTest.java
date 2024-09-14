@@ -14,7 +14,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Scanner;
 
-public class ADEgineTest {
+public class ADEngineTest {
 
     public AnomalyDetectionLog log;
 
