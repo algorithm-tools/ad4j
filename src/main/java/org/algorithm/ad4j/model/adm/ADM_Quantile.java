@@ -5,9 +5,8 @@ import org.algorithm.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithm.ad4j.pojo.AnomalyDetectionLog;
 import org.algorithm.ad4j.pojo.IndicatorEvaluateInfo;
 import org.algorithm.ad4j.pojo.IndicatorSeries;
-import org.algorithm.ad4j.utils.IndicatorSeriesComparator;
+import org.algorithm.ad4j.utils.IndicatorCalculateUtil;
 import org.apache.commons.collections4.CollectionUtils;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ public class ADM_Quantile extends AbstractADM {
     private double iqrMultiplier;
 
     public ADM_Quantile() {
-        super(AnomalyConstant.MODEL_ADM_Threshold, AnomalyConstant.TYPE_THRESHOLD);
+        super(AnomalyConstant.MODEL_ADM_Quantile, AnomalyConstant.TYPE_THRESHOLD);
     }
 
     @Override
@@ -34,19 +33,10 @@ public class ADM_Quantile extends AbstractADM {
 
     @Override
     public IndicatorEvaluateInfo evaluate(List<IndicatorSeries> data, AnomalyDetectionLog log) {
-        // sort
-        data.sort(new IndicatorSeriesComparator());
-
-        // calculate Q1,Q3
-        double Q1 = quantile(data, 0.25);  // 25%
-        double Q3 = quantile(data, 0.75);  // 75%
-
-        // calculate IQR
-        double IQR = Q3 - Q1;
-
         // calculate bound
-        double lowerBound = Q1 - iqrMultiplier * IQR;
-        double upperBound = Q3 + iqrMultiplier * IQR;
+        double[] quantileBound = IndicatorCalculateUtil.quantileBound(data, iqrMultiplier, 0.25, 0.75);
+        double lowerBound = quantileBound[0];
+        double upperBound = quantileBound[1];
 
         // find anomaly indicator series
         List<IndicatorSeries> anomalyList = data.stream().filter(v -> v.getValue() > upperBound || v.getValue() < lowerBound).collect(Collectors.toList());
@@ -75,12 +65,10 @@ public class ADM_Quantile extends AbstractADM {
         int lowerIndex = (int) Math.floor(index);
         int upperIndex = (int) Math.ceil(index);
 
-        // 如果 index 恰好是整数，直接返回对应的数据点
         if (lowerIndex == upperIndex) {
             return sortedData.get(lowerIndex).getValue();
         }
 
-        // 否则进行线性插值
         double weight = index - lowerIndex;
         return (1 - weight) * sortedData.get(lowerIndex).getValue() + weight * sortedData.get(upperIndex).getValue();
     }
