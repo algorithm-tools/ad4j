@@ -5,9 +5,11 @@ import org.algorithm.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithm.ad4j.pojo.AnomalyDetectionLog;
 import org.algorithm.ad4j.pojo.IndicatorEvaluateInfo;
 import org.algorithm.ad4j.pojo.IndicatorSeries;
+import org.algorithm.ad4j.utils.IndicatorCalculateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Anomaly detection model: Based on abnormal detection of volatility fluctuations
@@ -44,11 +46,17 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
             y.add(i, indicatorSeries.get(i).getValue());
         }
         List<Double> secondDerivative = calculateSecondDerivative(y, x);
+        // derivative threshold filter
         List<Integer> candidatePoints = findCandidatePoints(secondDerivative, threshold);
-        int maxBendingPointIndex = findMaxBendingPoint(y, candidatePoints);
+        // lowerBound-upperBound filter
+        double[] quantileIQR = IndicatorCalculateUtil.quantileIQR(indicatorSeries);
+        double lowerBound = quantileIQR[0];
+        double upperBound = quantileIQR[1];
+        candidatePoints = candidatePoints.stream().filter(v -> indicatorSeries.get(v).getValue() > upperBound || indicatorSeries.get(v).getValue() < lowerBound).collect(Collectors.toList());
+        // find max bending point
+        int maxBendingPointIndex = findMaxBendingPoint(indicatorSeries, candidatePoints);
 
-        boolean hasAnomaly = maxBendingPointIndex >= 0; // TODO 不一定都有异常，阈值要调整
-
+        boolean hasAnomaly = maxBendingPointIndex >= 0;
         // build evaluate info
         IndicatorEvaluateInfo result = buildDefaultEvaluateInfo();
         if (hasAnomaly) {
@@ -56,8 +64,8 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
             mbpSeries.add(indicatorSeries.get(maxBendingPointIndex));
 
             result.setHasAnomaly(true);
-            result.setNormalRangeMin(0d);
-            result.setNormalRangeMax(0d);
+            result.setNormalRangeMin(lowerBound);
+            result.setNormalRangeMax(upperBound);
             result.setSeriesList(mbpSeries);
             return result;
         }
@@ -74,20 +82,20 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
     }
 
     // Calculate the first derivative
-    public List<Double> calculateFirstDerivative(List<Double> data, List<Double> x) {
+    private List<Double> calculateFirstDerivative(List<Double> y, List<Double> x) {
         List<Double> firstDerivative = new ArrayList<>();
-        for (int i = 1; i < data.size() - 1; i++) {
-            double derivative = (data.get(i + 1) - data.get(i - 1)) / (x.get(i + 1) - x.get(i - 1));
+        for (int i = 1; i < y.size() - 1; i++) {
+            double derivative = (y.get(i + 1) - y.get(i - 1)) / (x.get(i + 1) - x.get(i - 1));
             firstDerivative.add(derivative);
         }
         return firstDerivative;
     }
 
     // Calculate the second derivative
-    public List<Double> calculateSecondDerivative(List<Double> data, List<Double> x) {
+    private List<Double> calculateSecondDerivative(List<Double> y, List<Double> x) {
         List<Double> secondDerivative = new ArrayList<>();
-        for (int i = 1; i < data.size() - 1; i++) {
-            double derivative = (data.get(i + 1) - 2 * data.get(i) + data.get(i - 1))
+        for (int i = 1; i < y.size() - 1; i++) {
+            double derivative = (y.get(i + 1) - 2 * y.get(i) + y.get(i - 1))
                     / Math.pow(x.get(i + 1) - x.get(i), 2);
             secondDerivative.add(derivative);
         }
@@ -95,7 +103,7 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
     }
 
     // Filter candidate inflection points based on threshold
-    public static List<Integer> findCandidatePoints(List<Double> secondDerivative, double threshold) {
+    private List<Integer> findCandidatePoints(List<Double> secondDerivative, double threshold) {
         List<Integer> candidatePoints = new ArrayList<>();
         for (int i = 0; i < secondDerivative.size(); i++) {
             if (Math.abs(secondDerivative.get(i)) > threshold) {
@@ -106,14 +114,14 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
     }
 
     // Calculate the distance between the candidate inflection point and the two endpoints of the curve
-    public static int findMaxBendingPoint(List<Double> data, List<Integer> candidatePoints) {
+    public static int findMaxBendingPoint(List<IndicatorSeries> data, List<Integer> candidatePoints) {
         if (candidatePoints.isEmpty()) {
             return -1;
         }
         double maxDistance = -1;
         int maxBendingPointIndex = -1;
         for (int idx : candidatePoints) {
-            double distance = Math.abs(data.get(idx) - data.get(0)) + Math.abs(data.get(idx) - data.get(data.size() - 1));
+            double distance = Math.abs(data.get(idx).getValue() - data.get(0).getValue()) + Math.abs(data.get(idx).getValue() - data.get(data.size() - 1).getValue());
             if (distance > maxDistance) {
                 maxDistance = distance;
                 maxBendingPointIndex = idx;
