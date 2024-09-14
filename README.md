@@ -30,25 +30,26 @@ Its main feature are as follows:
 
 # Use case
 
-`ADEngineTest`print result:
-```text
-==============Anomaly Detection Result=============
-1.Anomaly detection original data:[[0, 10.0, 0], [5, 10.5, 5], [1, 12.0, 1], [2, 12.5, 2], [4, 13.0, 4], [7, 14.0, 7], [9, 14.5, 9], [8, 15.0, 8], [10, 15.5, 10], [6, 100.0, 6], [3, 133.0, 3]]
-2.Overview: has 4 types anomaly detected.
-3.[Anomaly: 1] [{"anomalyDetectionModel":"ADM_GESD","anomalyInfluence":0,"anomalyTrend":0,"anomalyType":1,"hasAnomaly":true,"normalRangeMax":0.0,"normalRangeMin":0.0,"seriesList":[{"logicalIndex":"3","time":3,"value":133.0},{"logicalIndex":"6","time":6,"value":100.0}]}]
-3.[Anomaly: 2] [{"anomalyDetectionModel":"ADM_2ndDerivationMBP","anomalyInfluence":0,"anomalyTrend":0,"anomalyType":2,"hasAnomaly":true,"normalRangeMax":0.0,"normalRangeMin":0.0,"seriesList":[{"logicalIndex":"3","time":3,"value":133.0}]}]
-3.[Anomaly: 3] [{"anomalyDetectionModel":"ADM_ManKendall","anomalyInfluence":0,"anomalyTrend":0,"anomalyType":3,"hasAnomaly":false}]
-3.[Anomaly: 10] [{"anomalyDetectionModel":"ADM_Threshold","anomalyInfluence":0,"anomalyTrend":0,"anomalyType":10,"hasAnomaly":true,"normalRangeMax":19.75,"normalRangeMin":7.75,"seriesList":[{"logicalIndex":"6","time":6,"value":100.0},{"logicalIndex":"3","time":3,"value":133.0}]}]
-==============Anomaly Detection Result End=========
-click Enter to close window...
-```
+- Indicator original data:`10.0, 12.0, 12.5, 133.0, 13.0, 10.5, 100.0, 14.0, 15.0, 14.5, 15.5`
+- This is Line chart: ![TestAD_Engin_LineChart](docs/pic/TestAD_Engin.png "TestAD_Engin_LineChart")
+- `ADEngineTest`print result:
+  ```text
+  ==============Anomaly Detection Result=============
+  1.Anomaly detection original data:[[0, 10.0, 0], [1, 12.0, 1], [2, 12.5, 2], [3, 133.0, 3], [4, 13.0, 4], [5, 10.5, 5], [6, 100.0, 6], [7, 14.0, 7], [8, 15.0, 8], [9, 14.5, 9], [10, 15.5, 10]]
+  2.Overview: has 3 types anomaly detected.
+  3.1.[Anomaly: Fluctuation Anomaly] [{"anomalyDetectionModel":"MODEL_ADM_2ndDerivationMBP","anomalyType":"TYPE_FLUCTUATION","hasAnomaly":true,"normalRangeMax":19.75,"normalRangeMin":7.75,"seriesList":[{"logicalIndex":"3","time":3,"value":133.0}]}]
+  3.2.[Anomaly: Outliers Anomaly] [{"anomalyDetectionModel":"MODEL_ADM_GESD","anomalyType":"TYPE_OUTLIERS_VALUE","hasAnomaly":true,"normalRangeMax":0.0,"normalRangeMin":0.0,"seriesList":[{"logicalIndex":"3","time":3,"value":133.0},{"logicalIndex":"6","time":6,"value":100.0}]},{"anomalyDetectionModel":"MODEL_ADM_Quantile","anomalyType":"TYPE_OUTLIERS_VALUE","hasAnomaly":true,"normalRangeMax":19.75,"normalRangeMin":7.75,"seriesList":[{"$ref":"$[0].seriesList[0]"},{"$ref":"$[0].seriesList[1]"}]}]
+  3.3.[Anomaly: Trend Anomaly] [{"anomalyDetectionModel":"MODEL_ADM_ManKendall","anomalyTrend":"TREND_UP","anomalyType":"TYPE_TREND","hasAnomaly":true,"normalRangeMax":0.0,"normalRangeMin":0.0}]
+  ==============Anomaly Detection Result End=========
+  click Enter to close window...
+  ```
 More monitoring algorithms are being added, welcome to co build.
 
 # Participate in Contributions
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/algorithm-tools/AnomalyDetection-Java/pulls)
 
-Welcome to join the group, build a win-win situation.
+Welcome to join the community, build a win-win situation, please refer to the contribution process： [How to contribute](https://github.com/algorithm-tools/ad4j/docs/developer_guide/Contribution_Guide.md).
 
 Thank you to all the people who already contributed to AnomalyDetection-Java!
 
