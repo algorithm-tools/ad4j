@@ -2,8 +2,10 @@ package org.algorithm.ad4j.utils;
 
 import com.sun.istack.internal.NotNull;
 import org.algorithm.ad4j.pojo.IndicatorSeries;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class IndicatorCalculateUtil {
@@ -63,5 +65,20 @@ public class IndicatorCalculateUtil {
 
         double weight = index - lowerIndex;
         return (1 - weight) * sortedData.get(lowerIndex).getValue() + weight * sortedData.get(upperIndex).getValue();
+    }
+
+    public static DescriptiveStatistics initStatistic(DescriptiveStatistics stats, List<IndicatorSeries> dataList, List<Integer> excludeIndexList) {
+        if (Objects.isNull(stats)) {
+            stats = new DescriptiveStatistics();
+        } else {
+            stats.clear();
+        }
+
+        for (int i = 0; i < dataList.size(); i++) {
+            if (excludeIndexList == null || !excludeIndexList.contains(i)) {
+                stats.addValue(dataList.get(i).getValue());
+            }
+        }
+        return stats;
     }
 }

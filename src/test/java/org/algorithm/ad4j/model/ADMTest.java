@@ -11,8 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -27,13 +25,7 @@ public class ADMTest {
 
     @Test
     public void testADM_2ndDerivationMBP(){
-//        for (int i = 0; i <= 100; i++) {
-//            double xi = i * 0.1;
-//            x.add(xi);
-//            y.add(Math.sin(xi) + 0.5 * Math.sin(2 * xi));
-//        }
-
-        double[] data = {1, 2, 3, 5, 5, 8, 6, 8, 5, 2};
+        double[] data = {10.0, 12.0, 12.5, 85.0, 13.0, 10.5, 100.0, 14.0, 15.0, 14.5, 15.5};;
         List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
 
         AbstractADM model = new ADM_2ndDerivationMBP();
@@ -58,7 +50,7 @@ public class ADMTest {
 
     @Test
     public void testADM_MannKendall(){
-        double[] data = new double[]{10.0, 12.0, 12.5, 13.0, 10.5, 14.0, 15.0, 14.5, 16.0};
+        double[] data = new double[]{10.0, 12.0, 12.5, 13.0, 55.0, 10.5, 14.0, 15.0, 14.5, 16.0};
         List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
         AbstractADM model = new ADM_MannKendall();
         model.init(new AnomalyDetectionContext());
