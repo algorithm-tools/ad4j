@@ -4,9 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>anomaly-detection</artifactId>
-    <groupId>org.algorithm.ad4j</groupId>
+    <packaging>jar</packaging>
+
+    <artifactId>ad4j</artifactId>
+    <groupId>org.algorithmtools.ad4j</groupId>
     <version>0.1</version>
+
+    <name>ad4j: Anomaly Detection For Java</name>
+    <description>Java implemented anomaly detection library. </description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
