@@ -43,3 +43,18 @@ Its main feature are as follows:
 click Enter to close window...
 ```
 More monitoring algorithms are being added, welcome to co build.
+
+# Participate in Contributions
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/algorithm-tools/AnomalyDetection-Java/pulls)
+
+Welcome to join the group, build a win-win situation.
+
+Thank you to all the people who already contributed to AnomalyDetection-Java!
+
+[![Contributors](https://contrib.rocks/image?repo=algorithm-tools/AnomalyDetection-Java)](https://github.com/algorithm-tools/AnomalyDetection-Java/graphs/contributors)
+
+
+# Get Help
+
+- Create an issue and describe it clearly.
