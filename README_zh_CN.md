@@ -29,10 +29,11 @@ AnomalyDetection-Java是一个基于统计学、机器学习等思路实现的�
 
 
 # Use case
-
+> ADEngineTest.java
 
 - Indicator original data:`10.0, 12.0, 12.5, 133.0, 13.0, 10.5, 100.0, 14.0, 15.0, 14.5, 15.5`
-- This is Line chart: ![TestAD_Engin_LineChart](docs/pic/TestAD_Engin.png "TestAD_Engin_LineChart")
+- This is Line chart: 
+  ![TestAD_Engin_LineChart](docs/pic/TestAD_Engin.png "TestAD_Engin_LineChart")
 - `ADEngineTest`print result:
   ```text
   ==============Anomaly Detection Result=============
@@ -51,7 +52,7 @@ AnomalyDetection-Java是一个基于统计学、机器学习等思路实现的�
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/algorithm-tools/AnomalyDetection-Java/pulls)
 
-欢迎加入共建共赢， 贡献流程请参考：[参与贡献](https://github.com/algorithm-tools/ad4j/docs/developer_guide/Contribution_Guide_zh_CN.md).
+欢迎加入共建共赢， 贡献流程请参考：[参与贡献](https://github.com/algorithm-tools/ad4j/blob/main/docs/developer_guide/Contribution_Guide_zh_CN.md).
 
 感谢所有做出贡献的人！
 

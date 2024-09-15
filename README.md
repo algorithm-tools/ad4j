@@ -28,10 +28,12 @@ Its main feature are as follows:
   |Threshold anomaly | Threshold rule engine | Based on business threshold rules | Applicable to all distributions|
 
 
-# Use case
+# Test case
+> ADEngineTest.java
 
 - Indicator original data:`10.0, 12.0, 12.5, 133.0, 13.0, 10.5, 100.0, 14.0, 15.0, 14.5, 15.5`
-- This is Line chart: ![TestAD_Engin_LineChart](docs/pic/TestAD_Engin.png "TestAD_Engin_LineChart")
+- This is Line chart: 
+  ![TestAD_Engin_LineChart](docs/pic/TestAD_Engin.png "TestAD_Engin_LineChart")
 - `ADEngineTest`print result:
   ```text
   ==============Anomaly Detection Result=============
@@ -49,7 +51,7 @@ More monitoring algorithms are being added, welcome to co build.
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/algorithm-tools/AnomalyDetection-Java/pulls)
 
-Welcome to join the community, build a win-win situation, please refer to the contribution process： [How to contribute](https://github.com/algorithm-tools/ad4j/docs/developer_guide/Contribution_Guide.md).
+Welcome to join the community, build a win-win situation, please refer to the contribution process： [How to contribute](https://github.com/algorithm-tools/ad4j/blob/main/docs/developer_guide/Contribution_Guide.md).
 
 Thank you to all the people who already contributed to AnomalyDetection-Java!
 
