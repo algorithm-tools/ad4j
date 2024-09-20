@@ -7,8 +7,10 @@ import org.algorithmtools.ad4j.pojo.IndicatorEvaluateInfo;
 import org.algorithmtools.ad4j.pojo.IndicatorSeries;
 import org.algorithmtools.ad4j.utils.IndicatorCalculateUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.TDistribution;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.inference.KolmogorovSmirnovTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +50,19 @@ public class ADM_GESD extends AbstractADM {
     }
 
     @Override
-    public boolean checkCompatibility(List<IndicatorSeries> indicatorSeries, AnomalyDetectionLog log) {
-        // TODO 检查是否是正态分布
-        return true;
+    public boolean checkCompatibility(List<IndicatorSeries> seriesList, AnomalyDetectionLog log) {
+        //K-S检验
+        double[] data = new double[seriesList.size()];
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+        for (int i = 0; i < seriesList.size(); i++) {
+            stats.addValue(seriesList.get(i).getValue());
+            data[i] = seriesList.get(i).getValue();
+        }
+        double mean = stats.getMean();
+        double standardDeviation = stats.getStandardDeviation();
+        NormalDistribution normalDistribution = new NormalDistribution(mean, standardDeviation);
+        KolmogorovSmirnovTest ksTest = new KolmogorovSmirnovTest();
+        return ksTest.kolmogorovSmirnovTest(normalDistribution, data, 0.05);
     }
 
     protected List<Integer> gesd(List<IndicatorSeries> dataList, int maxOutliers, double alpha) {
