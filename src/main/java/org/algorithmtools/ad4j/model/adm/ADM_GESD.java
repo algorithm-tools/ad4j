@@ -51,18 +51,23 @@ public class ADM_GESD extends AbstractADM {
 
     @Override
     public boolean checkCompatibility(List<IndicatorSeries> seriesList, AnomalyDetectionLog log) {
-        //K-S检验
-        double[] data = new double[seriesList.size()];
-        DescriptiveStatistics stats = new DescriptiveStatistics();
-        for (int i = 0; i < seriesList.size(); i++) {
-            stats.addValue(seriesList.get(i).getValue());
-            data[i] = seriesList.get(i).getValue();
+        //todo 小数据量更优的检验方法
+        if (seriesList.size() < 50) {
+            return true;
+        } else {
+            //K-S检验
+            double[] data = new double[seriesList.size()];
+            DescriptiveStatistics stats = new DescriptiveStatistics();
+            for (int i = 0; i < seriesList.size(); i++) {
+                stats.addValue(seriesList.get(i).getValue());
+                data[i] = seriesList.get(i).getValue();
+            }
+            double mean = stats.getMean();
+            double standardDeviation = stats.getStandardDeviation();
+            NormalDistribution normalDistribution = new NormalDistribution(mean, standardDeviation);
+            KolmogorovSmirnovTest ksTest = new KolmogorovSmirnovTest();
+            return ksTest.kolmogorovSmirnovTest(normalDistribution, data, 0.05);
         }
-        double mean = stats.getMean();
-        double standardDeviation = stats.getStandardDeviation();
-        NormalDistribution normalDistribution = new NormalDistribution(mean, standardDeviation);
-        KolmogorovSmirnovTest ksTest = new KolmogorovSmirnovTest();
-        return ksTest.kolmogorovSmirnovTest(normalDistribution, data, 0.05);
     }
 
     protected List<Integer> gesd(List<IndicatorSeries> dataList, int maxOutliers, double alpha) {
