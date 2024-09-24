@@ -1,6 +1,5 @@
 package org.algorithmtools.ad4j.utils;
 
-import com.sun.istack.internal.NotNull;
 import org.algorithmtools.ad4j.pojo.IndicatorSeries;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
@@ -18,7 +17,7 @@ public class IndicatorCalculateUtil {
      * @param upperQuantile upperQuantile
      * @return [lowerBound, upperBound]
      */
-    public static double[] quantileBound(@NotNull List<IndicatorSeries> data, double iqrMultiplier, double lowerQuantile, double upperQuantile){
+    public static double[] quantileBound(List<IndicatorSeries> data, double iqrMultiplier, double lowerQuantile, double upperQuantile){
         // sort
         List<IndicatorSeries> sortList = data.stream().sorted(new IndicatorSeriesComparator()).collect(Collectors.toList());
 
@@ -40,11 +39,11 @@ public class IndicatorCalculateUtil {
      * @param data indicator series
      * @return [lowerBound, upperBound]
      */
-    public static double[] quantileIQR(@NotNull List<IndicatorSeries> data){
+    public static double[] quantileIQR(List<IndicatorSeries> data){
         return quantileBound(data, 1.5, 0.25, 0.75);
     }
 
-    public static List<IndicatorSeries> excludeOutlier(@NotNull List<IndicatorSeries> data){
+    public static List<IndicatorSeries> excludeOutlier(List<IndicatorSeries> data){
         double[] bound = quantileIQR(data);
         double lowerBound = bound[0];
         double upperBound = bound[1];

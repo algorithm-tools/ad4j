@@ -52,6 +52,9 @@ public class IndicatorEvaluateInfo implements Serializable {
     }
 
     public void add(IndicatorSeries series) {
+        if(getSeriesList() == null){
+            this.seriesList = new ArrayList<>();
+        }
         getSeriesList().add(series);
     }
 

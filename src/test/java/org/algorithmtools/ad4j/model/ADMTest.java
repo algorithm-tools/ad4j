@@ -75,6 +75,33 @@ public class ADMTest {
         IndicatorSeriesUtil.print(evaluate);
     }
 
+    @Test
+    public void testADM_ZScore(){
+        double[] data = new double[]{10.0, 12.0, 12.5, 133.0, 13.0, 10.5, 100.0, 14.0, 15.0, 14.5, 15.5};
+        data = new double[]{
+                1.26
+                ,1.10
+                ,1.54
+                ,2.58
+                ,3.48
+                ,1.64
+                ,1.74
+                ,1.36
+                ,2.53
+                ,2.47
+                ,1.56
+                ,0.91
+                ,2.00
+        };
+        List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
+        AbstractADM model = new ADM_ZScore();
+        model.init(new AnomalyDetectionContext());
+        model.checkCompatibility(indicatorSeries, log);
+
+        IndicatorEvaluateInfo evaluate = model.evaluate(indicatorSeries, log);
+        IndicatorSeriesUtil.print(evaluate);
+    }
+
     @After
     public void afterSleep() throws InterruptedException {
         System.out.println("click Enter to close window...");

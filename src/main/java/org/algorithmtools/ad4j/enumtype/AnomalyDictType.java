@@ -14,6 +14,8 @@ public enum AnomalyDictType {
     MODEL_ADM_ManKendall("ADM_ManKendall", "ADM_ManKendall", "基于Mann-Kendall的趋势异常检测"),
     /** Threshold-based anomaly detection */
     MODEL_ADM_Threshold("ADM_Threshold", "ADM_Threshold", "基于阈值的异常检测"),
+    /** Z-Score anomaly detection */
+    MODEL_ADM_ZScore("ADM_ZScore", "ADM_ZScore", "基于Z-score的异常检测"),
 
 
     //=================INFLUENCE======================//
@@ -43,6 +45,7 @@ public enum AnomalyDictType {
     TYPE_TREND("3", "Trend Anomaly", "趋势异常"),
     /** Threshold Anomaly */
     TYPE_THRESHOLD("10", "Threshold Anomaly", "阈值异常"),
+
 
     ;
 

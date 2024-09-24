@@ -1,6 +1,5 @@
 package org.algorithmtools.ad4j.engine;
 
-import com.sun.istack.internal.NotNull;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
 import org.algorithmtools.ad4j.model.adm.*;
 import org.algorithmtools.ad4j.pojo.*;
@@ -29,11 +28,13 @@ public class AnomalyDetectionEngine {
 
         AbstractADM adm = new ADM_GESD();
         admMap.put(adm.getAnomalyDetectionModel(), adm);
+        adm = new ADM_Quantile();
+        admMap.put(adm.getAnomalyDetectionModel(), adm);
+        adm = new ADM_ZScore();
+        admMap.put(adm.getAnomalyDetectionModel(), adm);
         adm = new ADM_2ndDerivationMBP();
         admMap.put(adm.getAnomalyDetectionModel(), adm);
         adm = new ADM_MannKendall();
-        admMap.put(adm.getAnomalyDetectionModel(), adm);
-        adm = new ADM_Quantile();
         admMap.put(adm.getAnomalyDetectionModel(), adm);
 
         initADM(this.context);
@@ -43,7 +44,7 @@ public class AnomalyDetectionEngine {
         admMap.values().forEach(v -> v.init(context));
     }
 
-    public AnomalyDetectionResult detect(@NotNull IndicatorInfo indicatorInfo) {
+    public AnomalyDetectionResult detect(IndicatorInfo indicatorInfo) {
         if (CollectionUtils.isEmpty(indicatorInfo.getIndicatorSeries())) {
             return null;
         }
@@ -52,7 +53,9 @@ public class AnomalyDetectionEngine {
         for (Map.Entry<AnomalyDictType, AbstractADM> admEntry : admMap.entrySet()) {
             LOGGER.info("anomaly detect, [{}] processing.", admEntry.getKey());
             IndicatorEvaluateInfo evaluateResult = evaluate(admEntry.getValue(), indicatorInfo.getIndicatorSeries());
-            detectionResult.addIndicatorEvaluateInfo(evaluateResult.getAnomalyType(), evaluateResult);
+            if(evaluateResult.isHasAnomaly()){
+                detectionResult.addIndicatorEvaluateInfo(evaluateResult.getAnomalyType(), evaluateResult);
+            }
             LOGGER.info("anomaly detect, [{}] process over.", admEntry.getKey());
         }
 

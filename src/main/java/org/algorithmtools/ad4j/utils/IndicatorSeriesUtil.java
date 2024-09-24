@@ -1,7 +1,6 @@
 package org.algorithmtools.ad4j.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sun.istack.internal.NotNull;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionResult;
 import org.algorithmtools.ad4j.pojo.IndicatorEvaluateInfo;
@@ -13,7 +12,7 @@ import java.util.Map;
 
 public class IndicatorSeriesUtil {
 
-    public static List<IndicatorSeries> transferFromArray(@NotNull double[] array){
+    public static List<IndicatorSeries> transferFromArray(double[] array){
         List<IndicatorSeries> list = new ArrayList<IndicatorSeries>();
         for (int i = 0; i < array.length; i++) {
             list.add(i, new IndicatorSeries(i, array[i], String.valueOf(i)));
@@ -21,7 +20,7 @@ public class IndicatorSeriesUtil {
         return list;
     }
 
-    public static double[] transferToArray(@NotNull List<IndicatorSeries> series){
+    public static double[] transferToArray(List<IndicatorSeries> series){
         double[] resultArray = new double[series.size()];
         for (int i = 0; i < series.size(); i++) {
             resultArray[i] = series.get(i).getValue();

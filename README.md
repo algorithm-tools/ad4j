@@ -1,7 +1,7 @@
 # AnomalyDetection-Java
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=socialflat-square&)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Total Lines](https://img.shields.io/github/stars/algorithm-tools/AnomalyDetection-Java?style=socialflat-square&label=stars)](https://github.com/DataLinkDC/dinky/stargazers)
+[![Total Lines](https://img.shields.io/github/stars/algorithm-tools/ad4j?style=socialflat-square&label=stars)](https://github.com/algorithm-tools/ad4j/stargazers)
 [![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg?style=socialflat-square&)](README_zh_CN.md)
 [![EN doc](https://img.shields.io/badge/document-English-blue.svg?style=socialflat-square&)](README.md)
 
@@ -49,13 +49,13 @@ More monitoring algorithms are being added, welcome to co build.
 
 # Participate in Contributions
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/algorithm-tools/AnomalyDetection-Java/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/algorithm-tools/ad4j/pulls)
 
 Welcome to join the community, build a win-win situation, please refer to the contribution process： [How to contribute](https://github.com/algorithm-tools/ad4j/blob/main/docs/developer_guide/Contribution_Guide.md).
 
 Thank you to all the people who already contributed to AnomalyDetection-Java!
 
-[![Contributors](https://contrib.rocks/image?repo=algorithm-tools/AnomalyDetection-Java)](https://github.com/algorithm-tools/AnomalyDetection-Java/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=algorithm-tools/AnomalyDetection-Java)](https://github.com/algorithm-tools/ad4j/graphs/contributors)
 
 
 # Get Help
