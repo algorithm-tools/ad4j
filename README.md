@@ -23,7 +23,7 @@ Its main feature are as follows:
   |-------------------------|----|----|----|
   |Absolute value anomaly | GESD                    | Calculate generalized extreme student bias statistic to find outliers | Apply normal distribution|
   |Absolute value anomaly | Z-score                 | Z-Score based detection | Apply normal distribution|
-- |Absolute value anomaly | Quantile                | Quantile based statistical algorithm | Applicable to all distributions|
+  |Absolute value anomaly | Quantile                | Quantile based statistical algorithm | Applicable to all distributions|
   |Abnormal fluctuations | 2nd derivative+distance | Finding MBP based on second derivative and distance | Normal and non normal distributions of inflection points|
   |Trend anomaly | Mann Kendall            | Based on Mann Kendall test | Applicable to all distributions|
   |Threshold anomaly | Threshold rule engine   | Based on business threshold rules | Applicable to all distributions|
