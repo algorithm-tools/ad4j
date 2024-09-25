@@ -3,7 +3,7 @@ package org.algorithmtools.ad4j.engine;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
 import org.algorithmtools.ad4j.model.adm.*;
 import org.algorithmtools.ad4j.pojo.*;
-import org.apache.commons.collections4.CollectionUtils;
+import org.algorithmtools.ad4j.utils.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public class AnomalyDetectionEngine {
     }
 
     public AnomalyDetectionResult detect(IndicatorInfo indicatorInfo) {
-        if (CollectionUtils.isEmpty(indicatorInfo.getIndicatorSeries())) {
+        if (CollectionUtil.isEmpty(indicatorInfo.getIndicatorSeries())) {
             return null;
         }
 

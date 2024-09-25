@@ -1,7 +1,7 @@
 # AnomalyDetection-Java
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=socialflat-square&)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Total Lines](https://img.shields.io/github/stars/algorithm-tools/AnomalyDetection-Java?style=socialflat-square&label=stars)](https://github.com/DataLinkDC/dinky/stargazers)
+[![Total Lines](https://img.shields.io/github/stars/algorithm-tools/ad4j?style=socialflat-square&label=stars)](https://github.com/algorithm-tools/ad4j/stargazers)
 [![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg?style=socialflat-square&)](README_zh_CN.md)
 [![EN doc](https://img.shields.io/badge/document-English-blue.svg?style=socialflat-square&)](README.md)
 
@@ -17,18 +17,79 @@ AnomalyDetection-Java是一个基于统计学、机器学习等思路实现的�
 
 - 依赖JDK环境和common-math3库，并通过JFreeChart进行图形化测试样例。
 - 高扩展性：架构十分简单。开发者可以灵活高效的增加业务域异常检测规则，或者增加其他类型的算法。
-- 当前支持如下监测算法：
+ 当前支持如下监测算法：
 
-  | 异常类型  |算法|原理| 限制      |
-  |----|----|----|----|
-  | 绝对值异常 |GESD|计算广义极端学生化偏差统计量寻找异常点| 适用正态分布 |
-  | 绝对值异常 | Quantile |  基于分位统计算法   | 适用所有分布  |
-  | 波动异常  | 2阶导+距离 |  基于二阶导数和距离寻找MBP | 拐点存在的正态、非正态分布 |
-  | 趋势异常  | Mann-Kendall |  基于MannKendall检验 | 适用所有分布 |
-  | 阈值异常   | 阈值规则引擎 |  基于业务阈值规则 | 适用所有分布 |
+  | 异常类型  | 算法           | 原理                  | 限制             |
+  |--------------|---------------------|----------------|----|
+  | 绝对值异常 | GESD         | 计算广义极端学生化偏差统计量寻找异常点 | 适用正态分布         |
+  | 绝对值异常 | Z-score      | 基于Z-score算法         | 适用正态分布、异常点较少情况 |
+  | 绝对值异常 | Quantile     | 基于分位统计算法            | 适用所有分布         |
+  | 波动异常  | 2阶导+距离       | 基于二阶导数和距离寻找MBP      | 拐点存在的正态、非正态分布  |
+  | 趋势异常  | Mann-Kendall | 基于MannKendall检验     | 适用所有分布         |
+  | 阈值异常   | 阈值规则引擎       | 基于业务阈值规则            | 适用所有分布         |
+
+# Demos
+- [ad4j-Demos](https://github.com/algorithm-tools/ad4j/tree/main/src/test/java/org/algorithmtools/example)
+
+# For Developers
+## Building ad4j
+you can build ad4j using Maven by issuing the following command from the root directory of the project:
+```text
+mvn clean install -Dmaven.test.skip=true
+```
+The build requires JDK 8 or later.
+
+## Using ad4j
+- add to maven pom:
+```xml
+<dependency>
+    <groupId>org.algorithmtools</groupId>
+    <artifactId>ad4j</artifactId>
+    <version>${version}</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/lib/ad4j-${version}.jar</systemPath>
+</dependency>
+
+```
+- business use:
+`BizUseExample`
+```java
+public class BizUseExample {
+
+    public static void main(String[] args) {
+        indicatorDetect();
+    }
+
+    public static void indicatorDetect(){
+        // 1. Transfer biz data to indicator series info
+        long currentTime = System.currentTimeMillis();
+        List<IndicatorSeries> indicatorSeries = new ArrayList<>();
+        indicatorSeries.add(new IndicatorSeries(currentTime + 1, 1d, "logicalIndex-1"));
+        indicatorSeries.add(new IndicatorSeries(currentTime + 2, 2d, "logicalIndex-2"));
+        indicatorSeries.add(new IndicatorSeries(currentTime + 3, 3d, "logicalIndex-3"));
+        indicatorSeries.add(new IndicatorSeries(currentTime + 4, 4d, "logicalIndex-4"));
+        indicatorSeries.add(new IndicatorSeries(currentTime + 5, 40d, "logicalIndex-5"));
+        indicatorSeries.add(new IndicatorSeries(currentTime + 6, 6d, "logicalIndex-6"));
+        indicatorSeries.add(new IndicatorSeries(currentTime + 7, 7d, "logicalIndex-7"));
+        indicatorSeries.add(new IndicatorSeries(currentTime + 8, 8d, "logicalIndex-8"));
+        indicatorSeries.add(new IndicatorSeries(currentTime + 9, 9d, "logicalIndex-9"));
+        indicatorSeries.add(new IndicatorSeries(currentTime + 10, 10d, "logicalIndex-10"));
+
+        IndicatorInfo info = new IndicatorInfo("Example", "Example-Name", indicatorSeries);
+
+        // 2. New AnomalyDetectionEngine to detect
+        AnomalyDetectionEngine engine = new AnomalyDetectionEngine();
+        AnomalyDetectionResult detectionResult = engine.detect(info);
+
+        // 3. Business process detect result. Like Records,Alarms,Print
+        IndicatorSeriesUtil.print(detectionResult);
+    }
+
+}
+```
 
 
-# Use case
+# Test case
 > ADEngineTest.java
 
 - Indicator original data:`10.0, 12.0, 12.5, 133.0, 13.0, 10.5, 100.0, 14.0, 15.0, 14.5, 15.5`
@@ -50,13 +111,13 @@ AnomalyDetection-Java是一个基于统计学、机器学习等思路实现的�
 
 # 参与贡献
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/algorithm-tools/AnomalyDetection-Java/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/algorithm-tools/ad4j/pulls)
 
 欢迎加入共建共赢， 贡献流程请参考：[参与贡献](https://github.com/algorithm-tools/ad4j/blob/main/docs/developer_guide/Contribution_Guide_zh_CN.md).
 
 感谢所有做出贡献的人！
 
-[![Contributors](https://contrib.rocks/image?repo=algorithm-tools/AnomalyDetection-Java)](https://github.com/algorithm-tools/AnomalyDetection-Java/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=algorithm-tools/AnomalyDetection-Java)](https://github.com/algorithm-tools/ad4j/graphs/contributors)
 
 
 # 获得帮助

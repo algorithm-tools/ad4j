@@ -5,8 +5,8 @@ import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
 import org.algorithmtools.ad4j.pojo.IndicatorEvaluateInfo;
 import org.algorithmtools.ad4j.pojo.IndicatorSeries;
+import org.algorithmtools.ad4j.utils.CollectionUtil;
 import org.algorithmtools.ad4j.utils.IndicatorCalculateUtil;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +43,7 @@ public class ADM_Quantile extends AbstractADM {
 
         // build evaluate info
         IndicatorEvaluateInfo result = buildDefaultEvaluateInfo();
-        if (CollectionUtils.isNotEmpty(anomalyList)) {
+        if (CollectionUtil.isNotEmpty(anomalyList)) {
             result.setHasAnomaly(true);
             result.setNormalRangeMin(lowerBound);
             result.setNormalRangeMax(upperBound);

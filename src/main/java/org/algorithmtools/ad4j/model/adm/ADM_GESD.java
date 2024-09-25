@@ -5,8 +5,8 @@ import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
 import org.algorithmtools.ad4j.pojo.IndicatorEvaluateInfo;
 import org.algorithmtools.ad4j.pojo.IndicatorSeries;
+import org.algorithmtools.ad4j.utils.CollectionUtil;
 import org.algorithmtools.ad4j.utils.IndicatorCalculateUtil;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.TDistribution;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -39,7 +39,7 @@ public class ADM_GESD extends AbstractADM {
 
         // build evaluate info
         IndicatorEvaluateInfo result = buildDefaultEvaluateInfo();
-        if (CollectionUtils.isNotEmpty(gesdIndexList)) {
+        if (CollectionUtil.isNotEmpty(gesdIndexList)) {
             result.setHasAnomaly(true);
             result.setNormalRangeMin(0d);
             result.setNormalRangeMax(0d);

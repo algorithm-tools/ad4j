@@ -4,8 +4,11 @@ import java.io.Serializable;
 
 
 public class IndicatorSeries implements Serializable {
+    /** indicator time, you can set other number for Timing Significance Values */
     private final long time;
+    /** indicator value */
     private final double value;
+    /** business logical index,facilitate business tracking. for example: ID */
     private final String logicalIndex;
 
     public IndicatorSeries(long time, double value, String logicalIndex) {

@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
 
     <artifactId>ad4j</artifactId>
-    <groupId>org.algorithmtools.ad4j</groupId>
+    <groupId>org.algorithmtools</groupId>
     <version>0.1</version>
 
     <name>ad4j: Anomaly Detection For Java</name>
@@ -47,18 +47,10 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.4</version>
-        </dependency>
-
-
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.76</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -73,5 +65,22 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
