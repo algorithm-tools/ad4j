@@ -19,7 +19,7 @@ public class IndicatorCalculateUtil {
      */
     public static double[] quantileBound(List<IndicatorSeries> data, double iqrMultiplier, double lowerQuantile, double upperQuantile){
         // sort
-        List<IndicatorSeries> sortList = data.stream().sorted(new IndicatorSeriesComparator()).collect(Collectors.toList());
+        List<IndicatorSeries> sortList = sortAsc(data);
 
         // calculate quantile value
         double Q1 = quantile(sortList, lowerQuantile);
@@ -52,7 +52,7 @@ public class IndicatorCalculateUtil {
         return data.stream().filter(v -> v.getValue() <= upperBound && v.getValue() >= lowerBound).collect(Collectors.toList());
     }
 
-    private static double quantile(List<IndicatorSeries> sortedData, double quantile) {
+    public static double quantile(List<IndicatorSeries> sortedData, double quantile) {
         int n = sortedData.size();
         double index = quantile * (n - 1);
         int lowerIndex = (int) Math.floor(index);
@@ -79,5 +79,9 @@ public class IndicatorCalculateUtil {
             }
         }
         return stats;
+    }
+
+    public static List<IndicatorSeries> sortAsc(List<IndicatorSeries> data){
+        return data.stream().sorted(new IndicatorSeriesComparator()).collect(Collectors.toList());
     }
 }

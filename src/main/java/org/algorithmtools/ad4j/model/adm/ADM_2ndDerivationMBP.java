@@ -1,5 +1,6 @@
 package org.algorithmtools.ad4j.model.adm;
 
+import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
@@ -33,7 +34,7 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
     @Override
     public void init(AnomalyDetectionContext context) {
         this.minPoints = 3;
-        this.threshold = 0.9; // TODO 动态
+        this.threshold = (Double) context.getConfig(ADMConfigs.ADM_2ED_DERIVATION_MBP_THRESHOLD);
     }
 
     @Override

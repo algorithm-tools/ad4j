@@ -1,10 +1,11 @@
 package org.algorithmtools.ad4j.model;
 
+import org.algorithmtools.ad4j.config.ADMConfigs;
+import org.algorithmtools.ad4j.enumtype.CompareType;
+import org.algorithmtools.ad4j.enumtype.LogicType;
+import org.algorithmtools.ad4j.enumtype.ThresholdType;
 import org.algorithmtools.ad4j.model.adm.*;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
-import org.algorithmtools.ad4j.pojo.IndicatorEvaluateInfo;
-import org.algorithmtools.ad4j.pojo.IndicatorSeries;
+import org.algorithmtools.ad4j.pojo.*;
 import org.algorithmtools.ad4j.utils.IndicatorSeriesUtil;
 import org.algorithmtools.chart.JFreeChartUtil;
 import org.junit.After;
@@ -96,6 +97,42 @@ public class ADMTest {
         List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
         AbstractADM model = new ADM_ZScore();
         model.init(new AnomalyDetectionContext());
+        model.checkCompatibility(indicatorSeries, log);
+
+        IndicatorEvaluateInfo evaluate = model.evaluate(indicatorSeries, log);
+        IndicatorSeriesUtil.print(evaluate);
+    }
+
+    @Test
+    public void testADM_ThresholdRule(){
+        double[] data = new double[]{10.0, 12.0, 12.5, 133.0, 13.0, 10.5, 100.0, 14.0, 15.0, 14.5, 15.5};
+        data = new double[]{
+                1.26
+                ,1.10
+                ,1.54
+                ,2.58
+                ,3.48
+                ,1.64
+                ,1.74
+                ,1.36
+                ,2.53
+                ,2.47
+                ,1.56
+                ,0.91
+                ,2.00
+        };
+        List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
+        AbstractADM model = new ADM_ThresholdRule();
+        AnomalyDetectionContext adContext = AnomalyDetectionContext.createDefault();
+        adContext.putConfig(ADMConfigs.ADM_THRESHOLD_RULE_USE, true);
+
+        ThresholdRuleBase ruleBase = new ThresholdRule(ThresholdType.CONSTANT, CompareType.GREATER_OR_EQ, 5.0);
+        ThresholdRuleBase ruleBase2 = new ThresholdRule(ThresholdType.CONSTANT, CompareType.LESS_OR_EQ, 1.0);
+        ThresholdRuleGroup ruleGroup = new ThresholdRuleGroup(LogicType.OR);
+        ruleGroup.addRules(ruleBase);
+        ruleGroup.addRules(ruleBase2);
+        adContext.putConfig(ADMConfigs.ADM_THRESHOLD_RULE_SET, ruleGroup);
+        model.init(adContext);
         model.checkCompatibility(indicatorSeries, log);
 
         IndicatorEvaluateInfo evaluate = model.evaluate(indicatorSeries, log);

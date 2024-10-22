@@ -1,5 +1,6 @@
 package org.algorithmtools.ad4j.model.adm;
 
+import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
@@ -28,7 +29,7 @@ public class ADM_Quantile extends AbstractADM {
 
     @Override
     public void init(AnomalyDetectionContext context) {
-        this.iqrMultiplier = 1.5;
+        this.iqrMultiplier = (Double) context.getConfig(ADMConfigs.ADM_QUANTILE_IQR_MULTIPLIER);
     }
 
     @Override
@@ -37,6 +38,8 @@ public class ADM_Quantile extends AbstractADM {
         double[] quantileBound = IndicatorCalculateUtil.quantileBound(data, iqrMultiplier, 0.25, 0.75);
         double lowerBound = quantileBound[0];
         double upperBound = quantileBound[1];
+        System.out.println(lowerBound);
+        System.out.println(upperBound);
 
         // find anomaly indicator series
         List<IndicatorSeries> anomalyList = data.stream().filter(v -> v.getValue() > upperBound || v.getValue() < lowerBound).collect(Collectors.toList());

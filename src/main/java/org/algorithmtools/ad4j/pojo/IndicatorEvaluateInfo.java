@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IndicatorEvaluateInfo implements Serializable {
-
+    private boolean hasAnomaly;
     /**
      * model name
      */
@@ -22,17 +22,14 @@ public class IndicatorEvaluateInfo implements Serializable {
      * anomaly influence
      */
     private AnomalyDictType anomalyInfluence;
-
-    private boolean hasAnomaly;
-
-    /**
-     * anomaly indicator point
-     */
-    private List<IndicatorSeries> seriesList;
     /**
      * anomaly trend
      */
     private AnomalyDictType anomalyTrend;
+    /**
+     * anomaly indicator point
+     */
+    private List<IndicatorSeries> seriesList;
     /**
      * Normal range：min
      */

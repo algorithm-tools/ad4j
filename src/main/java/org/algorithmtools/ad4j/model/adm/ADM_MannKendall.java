@@ -1,5 +1,6 @@
 package org.algorithmtools.ad4j.model.adm;
 
+import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
@@ -25,7 +26,8 @@ public class ADM_MannKendall extends AbstractADM {
 
     @Override
     public void init(AnomalyDetectionContext context) {
-        this.criticalZ = 1.96; // 显著性水平 P=0.05 对应的 Z 临界值（查标准正态分布表）
+//        this.criticalZ = 1.96;
+        this.criticalZ = (Double) context.getConfig(ADMConfigs.ADM_MANNKENDALL_CRITICALZ);
     }
 
     @Override

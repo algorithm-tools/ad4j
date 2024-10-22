@@ -1,5 +1,6 @@
 package org.algorithmtools.ad4j.model.adm;
 
+import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
 import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
@@ -23,7 +24,7 @@ public class ADM_ZScore extends AbstractADM {
 
     @Override
     public void init(AnomalyDetectionContext context) {
-        this.scoreThreshold = 2;
+        this.scoreThreshold = (Double) context.getConfig(ADMConfigs.ADM_ZSCORE_THRESHOLD);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.algorithmtools.ad4j.engine;
 
+import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
 import org.algorithmtools.ad4j.model.adm.*;
 import org.algorithmtools.ad4j.pojo.*;
@@ -24,18 +25,39 @@ public class AnomalyDetectionEngine {
     }
 
     public AnomalyDetectionEngine(AnomalyDetectionContext context) {
-        this.context = context == null ? new AnomalyDetectionContext() : context; // TODO default context build
+        this.context = context == null ? AnomalyDetectionContext.createDefault() : context;
 
-        AbstractADM adm = new ADM_GESD();
-        admMap.put(adm.getAnomalyDetectionModel(), adm);
-        adm = new ADM_Quantile();
-        admMap.put(adm.getAnomalyDetectionModel(), adm);
-        adm = new ADM_ZScore();
-        admMap.put(adm.getAnomalyDetectionModel(), adm);
-        adm = new ADM_2ndDerivationMBP();
-        admMap.put(adm.getAnomalyDetectionModel(), adm);
-        adm = new ADM_MannKendall();
-        admMap.put(adm.getAnomalyDetectionModel(), adm);
+        AbstractADM adm = null;
+        if((Boolean) this.context.getConfig(ADMConfigs.ADM_QUANTILE_USE)){
+            adm = new ADM_Quantile();
+            admMap.put(adm.getAnomalyDetectionModel(), adm);
+            this.context.addConfigAnomalyDetectionModel(AnomalyDictType.MODEL_ADM_Quantile);
+        }
+        if((Boolean) this.context.getConfig(ADMConfigs.ADM_ZSCORE_USE)){
+            adm = new ADM_ZScore();
+            admMap.put(adm.getAnomalyDetectionModel(), adm);
+            this.context.addConfigAnomalyDetectionModel(AnomalyDictType.MODEL_ADM_ZScore);
+        }
+        if((Boolean) this.context.getConfig(ADMConfigs.ADM_GESD_USE)){
+            adm = new ADM_GESD();
+            admMap.put(adm.getAnomalyDetectionModel(), adm);
+            this.context.addConfigAnomalyDetectionModel(AnomalyDictType.MODEL_ADM_GESD);
+        }
+        if((Boolean) this.context.getConfig(ADMConfigs.ADM_2ED_DERIVATION_MBP_USE)){
+            adm = new ADM_2ndDerivationMBP();
+            admMap.put(adm.getAnomalyDetectionModel(), adm);
+            this.context.addConfigAnomalyDetectionModel(AnomalyDictType.MODEL_ADM_2ndDerivationMBP);
+        }
+        if((Boolean) this.context.getConfig(ADMConfigs.ADM_MANNKENDALL_USE)){
+            adm = new ADM_MannKendall();
+            admMap.put(adm.getAnomalyDetectionModel(), adm);
+            this.context.addConfigAnomalyDetectionModel(AnomalyDictType.MODEL_ADM_ManKendall);
+        }
+        if((Boolean) this.context.getConfig(ADMConfigs.ADM_THRESHOLD_RULE_USE)){
+            adm = new ADM_ThresholdRule();
+            admMap.put(adm.getAnomalyDetectionModel(), adm);
+            this.context.addConfigAnomalyDetectionModel(AnomalyDictType.MODEL_ADM_ThresholdRule);
+        }
 
         initADM(this.context);
     }
