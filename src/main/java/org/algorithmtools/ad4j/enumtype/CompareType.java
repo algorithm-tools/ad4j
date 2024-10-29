@@ -25,13 +25,13 @@ public enum CompareType {
     public static CompareType parse(String signal) {
         if (">".equals(signal)) {
             return GREATER;
-        } else if (">=".equals(signal)) {
+        } else if (">=".equals(signal) || "GREATER_OR_EQUAL".equalsIgnoreCase(signal) || "GREATER_OR_EQ".equalsIgnoreCase(signal)) {
             return GREATER_OR_EQ;
-        } else if ("=".equals(signal) || "==".equals(signal)) {
+        } else if ("=".equals(signal) || "==".equals(signal) || "EQUAL".equalsIgnoreCase(signal) || "EQ".equalsIgnoreCase(signal)) {
             return EQ;
-        } else if ("<".equals(signal)) {
+        } else if ("<".equals(signal) || "LESS".equalsIgnoreCase(signal)) {
             return LESS;
-        } else if ("<=".equals(signal)) {
+        } else if ("<=".equals(signal) || "LESS_THAN_OR_EQUAL".equalsIgnoreCase(signal) || "LESS_THAN_OR_EQ".equalsIgnoreCase(signal)) {
             return LESS_OR_EQ;
         }
         throw new IllegalArgumentException("[" + signal + "] signal illegal! Please input >,>=,=,==,<,<=.");

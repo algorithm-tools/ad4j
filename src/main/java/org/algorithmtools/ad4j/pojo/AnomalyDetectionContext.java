@@ -1,8 +1,13 @@
 package org.algorithmtools.ad4j.pojo;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.config.ConfigOption;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
+import org.algorithmtools.ad4j.enumtype.CompareType;
+import org.algorithmtools.ad4j.enumtype.LogicType;
+import org.algorithmtools.ad4j.enumtype.ThresholdType;
 
 import java.io.Serializable;
 import java.util.*;
@@ -50,10 +55,56 @@ public class AnomalyDetectionContext implements Serializable {
 
     public static AnomalyDetectionContext createDefault(){
         AnomalyDetectionContext anomalyDetectionContext = new AnomalyDetectionContext();
+        defaultConfig(anomalyDetectionContext);
+        return anomalyDetectionContext;
+    }
+
+    public static AnomalyDetectionContext create(JSONObject propertiesJson){
+        AnomalyDetectionContext anomalyDetectionContext = new AnomalyDetectionContext();
+        defaultConfig(anomalyDetectionContext);
+
+        if(Objects.nonNull(propertiesJson)){
+            for (Map.Entry<String, Object> e : propertiesJson.entrySet()) {
+                if (e.getKey().equalsIgnoreCase(ADMConfigs.ADM_THRESHOLD_RULE_SET.getKey())) {
+                    anomalyDetectionContext.putConfig(e.getKey(), generalThresholdRule((JSONObject) e.getValue()));
+                } else {
+                    anomalyDetectionContext.putConfig(e.getKey(), e.getValue());
+                }
+            }
+        }
+
+        return anomalyDetectionContext;
+    }
+
+    /**
+     * data case:{"logicType":"and","ruleGroup":[{"factor":100,"thresholdType":"std","compareType":">"}]}
+     * @param thresholdRuleSetJson adm.threshold_rule.set config json
+     * @return ThresholdRuleBase
+     */
+    public static ThresholdRuleBase generalThresholdRule(JSONObject thresholdRuleSetJson) {
+        if (Objects.isNull(thresholdRuleSetJson)) {
+            return null;
+        }
+
+        if (thresholdRuleSetJson.containsKey("ruleGroup")) {
+            ThresholdRuleGroup ruleGroup = new ThresholdRuleGroup(LogicType.parse(thresholdRuleSetJson.getString("logicType")));
+            JSONArray jsonArr = thresholdRuleSetJson.getJSONArray("ruleGroup");
+            for (int i = 0; i < jsonArr.size(); i++) {
+                ThresholdRuleBase rb = generalThresholdRule(jsonArr.getJSONObject(i));
+                if(Objects.nonNull(rb)){
+                    ruleGroup.addRules(rb);
+                }
+            }
+            return ruleGroup;
+        } else {
+            return new ThresholdRule(ThresholdType.parse(thresholdRuleSetJson.getString("thresholdType")), CompareType.parse(thresholdRuleSetJson.getString("compareType")), thresholdRuleSetJson.getDouble("factor"));
+        }
+    }
+
+    private static void defaultConfig(AnomalyDetectionContext anomalyDetectionContext) {
         for (Map.Entry<String, ConfigOption> entry : ADMConfigs.configKeyMap.entrySet()) {
             anomalyDetectionContext.putConfig(entry.getValue(), entry.getValue().getDefaultValue());
         }
-        return anomalyDetectionContext;
     }
 
 
