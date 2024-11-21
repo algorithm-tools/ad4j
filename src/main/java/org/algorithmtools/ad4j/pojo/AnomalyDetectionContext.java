@@ -10,6 +10,7 @@ import org.algorithmtools.ad4j.enumtype.LogicType;
 import org.algorithmtools.ad4j.enumtype.ThresholdType;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class AnomalyDetectionContext implements Serializable {
@@ -34,11 +35,12 @@ public class AnomalyDetectionContext implements Serializable {
         if (!ADMConfigs.configKeyMap.containsKey(key)) {
             throw new IllegalArgumentException("["+key+"] not exist!");
         }
-        admConfigMap.put(ADMConfigs.configKeyMap.get(key), value);
+        putConfig(ADMConfigs.configKeyMap.get(key), value);
     }
 
     public void putConfig(ConfigOption configOption, Object value){
-        admConfigMap.put(configOption, value);
+        admConfigMap.put(configOption,
+                (value instanceof BigDecimal || value instanceof Double || value instanceof Float || value instanceof Integer) ? value.toString() : value);
     }
 
     public Object getConfig(String key){

@@ -34,7 +34,7 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
     @Override
     public void init(AnomalyDetectionContext context) {
         this.minPoints = 3;
-        this.threshold = (Double) context.getConfig(ADMConfigs.ADM_2ED_DERIVATION_MBP_THRESHOLD);
+        this.threshold = Double.parseDouble((String)context.getConfig(ADMConfigs.ADM_2ED_DERIVATION_MBP_THRESHOLD));
     }
 
     @Override

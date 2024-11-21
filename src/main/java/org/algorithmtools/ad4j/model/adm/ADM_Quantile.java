@@ -29,7 +29,7 @@ public class ADM_Quantile extends AbstractADM {
 
     @Override
     public void init(AnomalyDetectionContext context) {
-        this.iqrMultiplier = (Double) context.getConfig(ADMConfigs.ADM_QUANTILE_IQR_MULTIPLIER);
+        this.iqrMultiplier = Double.parseDouble((String) context.getConfig(ADMConfigs.ADM_QUANTILE_IQR_MULTIPLIER));
     }
 
     @Override

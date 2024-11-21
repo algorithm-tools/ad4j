@@ -27,7 +27,7 @@ public class ADM_MannKendall extends AbstractADM {
     @Override
     public void init(AnomalyDetectionContext context) {
 //        this.criticalZ = 1.96;
-        this.criticalZ = (Double) context.getConfig(ADMConfigs.ADM_MANNKENDALL_CRITICALZ);
+        this.criticalZ = Double.parseDouble((String) context.getConfig(ADMConfigs.ADM_MANNKENDALL_CRITICALZ));
     }
 
     @Override

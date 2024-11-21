@@ -24,7 +24,7 @@ public class ADM_ZScore extends AbstractADM {
 
     @Override
     public void init(AnomalyDetectionContext context) {
-        this.scoreThreshold = (Double) context.getConfig(ADMConfigs.ADM_ZSCORE_THRESHOLD);
+        this.scoreThreshold = Double.parseDouble((String) context.getConfig(ADMConfigs.ADM_ZSCORE_THRESHOLD));
     }
 
     @Override

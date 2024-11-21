@@ -13,7 +13,7 @@ public class ADMConfigs {
 
     //==================ADM Quantile Options=================//
     public static final ConfigOption<Boolean> ADM_QUANTILE_USE = new ConfigOption<>("adm.quantile.use", true, "Open Quantile detection function.");
-    public static final ConfigOption<Double> ADM_QUANTILE_IQR_MULTIPLIER = new ConfigOption<>("adm.quantile.iqr.multiplier", 1.0, "Quantile detection IQR multiplier.");
+    public static final ConfigOption<Double> ADM_QUANTILE_IQR_MULTIPLIER = new ConfigOption<>("adm.quantile.iqr.multiplier", 1.5, "Quantile detection IQR multiplier.");
 
     //==================ADM Z-score Options=================//
     public static final ConfigOption<Boolean> ADM_ZSCORE_USE = new ConfigOption<>("adm.zscore.use", true, "Open Z-score detection function.");

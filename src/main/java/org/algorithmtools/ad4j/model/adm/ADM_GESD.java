@@ -29,7 +29,7 @@ public class ADM_GESD extends AbstractADM {
 
     @Override
     public void init(AnomalyDetectionContext context) {
-        this.alpha = (Double) context.getConfig(ADMConfigs.ADM_GESD_ALPHA);
+        this.alpha = Double.parseDouble((String) context.getConfig(ADMConfigs.ADM_GESD_ALPHA));
     }
 
     @Override
