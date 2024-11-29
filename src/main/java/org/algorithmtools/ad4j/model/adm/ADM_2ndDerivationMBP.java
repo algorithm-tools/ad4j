@@ -2,10 +2,7 @@ package org.algorithmtools.ad4j.model.adm;
 
 import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
-import org.algorithmtools.ad4j.pojo.IndicatorEvaluateInfo;
-import org.algorithmtools.ad4j.pojo.IndicatorSeries;
+import org.algorithmtools.ad4j.pojo.*;
 import org.algorithmtools.ad4j.utils.IndicatorCalculateUtil;
 
 import java.util.ArrayList;
@@ -42,10 +39,14 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
         // get x,y
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
+        double sum = 0;
+        double mean = 0;
         for (int i = 0; i < indicatorSeries.size(); i++) {
             x.add(i, (double)i);
             y.add(i, indicatorSeries.get(i).getValue());
+            sum += indicatorSeries.get(i).getValue();
         }
+        mean = sum / indicatorSeries.size();
         List<Double> secondDerivative = calculateSecondDerivative(y, x);
         // derivative threshold filter
         List<Integer> candidatePoints = findCandidatePoints(secondDerivative, threshold);
@@ -61,13 +62,15 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
         // build evaluate info
         IndicatorEvaluateInfo result = buildDefaultEvaluateInfo();
         if (hasAnomaly) {
-            List<IndicatorSeries> mbpSeries = new ArrayList<>();
-            mbpSeries.add(indicatorSeries.get(maxBendingPointIndex));
+            List<AnomalyIndicatorSeries> mbpSeries = new ArrayList<>();
+            AnomalyIndicatorSeries anomalyIndicatorSeries = new AnomalyIndicatorSeries(indicatorSeries.get(maxBendingPointIndex));
+            anomalyIndicatorSeries.setAnomalyInfluence(anomalyIndicatorSeries.getIndicatorSeries().getValue() > mean ? AnomalyDictType.INFLUENCE_POSITIVE : AnomalyDictType.INFLUENCE_NEGATIVE);
+            mbpSeries.add(anomalyIndicatorSeries);
 
             result.setHasAnomaly(true);
             result.setNormalRangeMin(lowerBound);
             result.setNormalRangeMax(upperBound);
-            result.setSeriesList(mbpSeries);
+            result.setAnomalySeriesList(mbpSeries);
             return result;
         }
         return result;

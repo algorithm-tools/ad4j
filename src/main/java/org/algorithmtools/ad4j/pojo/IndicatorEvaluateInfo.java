@@ -19,17 +19,13 @@ public class IndicatorEvaluateInfo implements Serializable {
     private AnomalyDictType anomalyType;
 
     /**
-     * anomaly influence
-     */
-    private AnomalyDictType anomalyInfluence;
-    /**
      * anomaly trend
      */
     private AnomalyDictType anomalyTrend;
     /**
      * anomaly indicator point
      */
-    private List<IndicatorSeries> seriesList;
+    private List<AnomalyIndicatorSeries> anomalySeriesList;
     /**
      * Normal range：min
      */
@@ -41,18 +37,18 @@ public class IndicatorEvaluateInfo implements Serializable {
 
     public IndicatorEvaluateInfo(AnomalyDictType anomalyDetectionModel, AnomalyDictType anomalyType, boolean hasAnomaly) {
         if (hasAnomaly) {
-            this.seriesList = new ArrayList<>();
+            this.anomalySeriesList = new ArrayList<>();
         }
         this.anomalyType = anomalyType;
         this.anomalyDetectionModel = anomalyDetectionModel;
         this.hasAnomaly = hasAnomaly;
     }
 
-    public void add(IndicatorSeries series) {
-        if(getSeriesList() == null){
-            this.seriesList = new ArrayList<>();
+    public void add(AnomalyIndicatorSeries series) {
+        if(getAnomalySeriesList() == null){
+            this.anomalySeriesList = new ArrayList<>();
         }
-        getSeriesList().add(series);
+        getAnomalySeriesList().add(series);
     }
 
     public boolean isHasAnomaly() {
@@ -63,12 +59,12 @@ public class IndicatorEvaluateInfo implements Serializable {
         this.hasAnomaly = hasAnomaly;
     }
 
-    public List<IndicatorSeries> getSeriesList() {
-        return seriesList;
+    public List<AnomalyIndicatorSeries> getAnomalySeriesList() {
+        return anomalySeriesList;
     }
 
-    public void setSeriesList(List<IndicatorSeries> seriesList) {
-        this.seriesList = seriesList;
+    public void setAnomalySeriesList(List<AnomalyIndicatorSeries> anomalySeriesList) {
+        this.anomalySeriesList = anomalySeriesList;
     }
 
     public Double getNormalRangeMin() {
@@ -103,14 +99,6 @@ public class IndicatorEvaluateInfo implements Serializable {
         this.anomalyType = anomalyType;
     }
 
-    public AnomalyDictType getAnomalyInfluence() {
-        return anomalyInfluence;
-    }
-
-    public void setAnomalyInfluence(AnomalyDictType anomalyInfluence) {
-        this.anomalyInfluence = anomalyInfluence;
-    }
-
     public AnomalyDictType getAnomalyTrend() {
         return anomalyTrend;
     }
@@ -124,9 +112,8 @@ public class IndicatorEvaluateInfo implements Serializable {
         return "IndicatorEvaluateInfo{" +
                 "anomalyDetectionModel='" + anomalyDetectionModel + '\'' +
                 ", anomalyType=" + anomalyType +
-                ", anomalyInfluence=" + anomalyInfluence +
                 ", hasAnomaly=" + hasAnomaly +
-                ", seriesList=" + seriesList +
+                ", anomalySeriesList=" + anomalySeriesList +
                 ", anomalyTrend=" + anomalyTrend +
                 ", range=[" + normalRangeMin + ", " + normalRangeMax + "]" +
                 '}';

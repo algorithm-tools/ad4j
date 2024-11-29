@@ -2,10 +2,7 @@ package org.algorithmtools.ad4j.model.adm;
 
 import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
-import org.algorithmtools.ad4j.pojo.IndicatorEvaluateInfo;
-import org.algorithmtools.ad4j.pojo.IndicatorSeries;
+import org.algorithmtools.ad4j.pojo.*;
 import org.algorithmtools.ad4j.utils.CollectionUtil;
 import org.algorithmtools.ad4j.utils.IndicatorCalculateUtil;
 import org.apache.commons.math3.distribution.TDistribution;
@@ -42,7 +39,13 @@ public class ADM_GESD extends AbstractADM {
             result.setHasAnomaly(true);
             result.setNormalRangeMin(0d);
             result.setNormalRangeMax(0d);
-            result.setSeriesList(gesdIndexList.stream().map(indicatorSeries::get).collect(Collectors.toList()));
+
+            DescriptiveStatistics statistics = IndicatorCalculateUtil.initStatistic(null, indicatorSeries, null);
+            final double mean = statistics.getMean();
+            result.setAnomalySeriesList(gesdIndexList.stream()
+                    .map(v -> new AnomalyIndicatorSeries(indicatorSeries.get(v).getValue() > mean ? AnomalyDictType.INFLUENCE_POSITIVE : AnomalyDictType.INFLUENCE_NEGATIVE, indicatorSeries.get(v)))
+                    .collect(Collectors.toList())
+            );
         }
 
         return result;

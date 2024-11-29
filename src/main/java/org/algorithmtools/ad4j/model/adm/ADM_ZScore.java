@@ -2,10 +2,7 @@ package org.algorithmtools.ad4j.model.adm;
 
 import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
-import org.algorithmtools.ad4j.pojo.IndicatorEvaluateInfo;
-import org.algorithmtools.ad4j.pojo.IndicatorSeries;
+import org.algorithmtools.ad4j.pojo.*;
 import org.algorithmtools.ad4j.utils.IndicatorCalculateUtil;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
@@ -37,7 +34,8 @@ public class ADM_ZScore extends AbstractADM {
         for (int i = 0; i < indicatorSeries.size(); i++) {
             double zScore = (indicatorSeries.get(i).getValue() - mean) / stdDev;
             if (Math.abs(zScore) > scoreThreshold) {
-                result.add(indicatorSeries.get(i));
+                IndicatorSeries anomalyIndicatorSeries = indicatorSeries.get(i);
+                result.add(new AnomalyIndicatorSeries(anomalyIndicatorSeries.getValue() > mean ? AnomalyDictType.INFLUENCE_POSITIVE : AnomalyDictType.INFLUENCE_NEGATIVE, anomalyIndicatorSeries));
                 result.setHasAnomaly(true);
             }
         }

@@ -38,12 +38,13 @@ public class ADM_ThresholdRule extends AbstractADM {
 
         IndicatorEvaluateInfo result = buildDefaultEvaluateInfo();
         DescriptiveStatistics stats = IndicatorCalculateUtil.initStatistic(null, indicatorSeries, null);
+        double mean = stats.getMean();
         List<IndicatorSeries> sortList = IndicatorCalculateUtil.sortAsc(indicatorSeries);
         for (IndicatorSeries indicator : indicatorSeries) {
             boolean hasAnomaly = judgeHasAnomaly(sortList, stats, this.thresholdRule, indicator);
             if (hasAnomaly) {
                 result.setHasAnomaly(hasAnomaly);
-                result.add(indicator);
+                result.add(new AnomalyIndicatorSeries(indicator.getValue() > mean ? AnomalyDictType.INFLUENCE_POSITIVE : AnomalyDictType.INFLUENCE_NEGATIVE, indicator));
             }
         }
 

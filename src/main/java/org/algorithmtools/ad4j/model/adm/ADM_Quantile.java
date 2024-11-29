@@ -2,10 +2,7 @@ package org.algorithmtools.ad4j.model.adm;
 
 import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionContext;
-import org.algorithmtools.ad4j.pojo.AnomalyDetectionLog;
-import org.algorithmtools.ad4j.pojo.IndicatorEvaluateInfo;
-import org.algorithmtools.ad4j.pojo.IndicatorSeries;
+import org.algorithmtools.ad4j.pojo.*;
 import org.algorithmtools.ad4j.utils.CollectionUtil;
 import org.algorithmtools.ad4j.utils.IndicatorCalculateUtil;
 
@@ -38,11 +35,12 @@ public class ADM_Quantile extends AbstractADM {
         double[] quantileBound = IndicatorCalculateUtil.quantileBound(data, iqrMultiplier, 0.25, 0.75);
         double lowerBound = quantileBound[0];
         double upperBound = quantileBound[1];
-        System.out.println(lowerBound);
-        System.out.println(upperBound);
 
         // find anomaly indicator series
-        List<IndicatorSeries> anomalyList = data.stream().filter(v -> v.getValue() > upperBound || v.getValue() < lowerBound).collect(Collectors.toList());
+        List<AnomalyIndicatorSeries> anomalyList = data.stream()
+                .filter(v -> v.getValue() > upperBound || v.getValue() < lowerBound)
+                .map(v -> new AnomalyIndicatorSeries(v.getValue() > upperBound ? AnomalyDictType.INFLUENCE_POSITIVE : AnomalyDictType.INFLUENCE_NEGATIVE, v))
+                .collect(Collectors.toList());
 
         // build evaluate info
         IndicatorEvaluateInfo result = buildDefaultEvaluateInfo();
@@ -50,7 +48,7 @@ public class ADM_Quantile extends AbstractADM {
             result.setHasAnomaly(true);
             result.setNormalRangeMin(lowerBound);
             result.setNormalRangeMax(upperBound);
-            result.setSeriesList(anomalyList);
+            result.setAnomalySeriesList(anomalyList);
             return result;
         }
 
