@@ -31,7 +31,7 @@ public class ADMTest {
         List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
 
         AbstractADM model = new ADM_2ndDerivationMBP();
-        model.init(new AnomalyDetectionContext());
+        model.init(AnomalyDetectionContext.createDefault());
         model.checkCompatibility(indicatorSeries, log);
 
         IndicatorEvaluateInfo evaluate = model.evaluate(indicatorSeries, log);
@@ -40,10 +40,10 @@ public class ADMTest {
 
     @Test
     public void testADM_GESD(){
-        double[] data = new double[]{10.0, 12.0, 12.5, 133.0, 13.0, 10.5, 100.0, 14.0, 15.0, 14.5, 15.5};
+        double[] data = new double[]{10.0,12.0,12.0,13.0,12.0,11.0,50.0};
         List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
         AbstractADM model = new ADM_GESD();
-        model.init(new AnomalyDetectionContext());
+        model.init(AnomalyDetectionContext.createDefault());
         model.checkCompatibility(indicatorSeries, log);
 
         IndicatorEvaluateInfo evaluate = model.evaluate(indicatorSeries, log);
@@ -55,7 +55,7 @@ public class ADMTest {
         double[] data = new double[]{10.0, 12.0, 12.5, 13.0, 55.0, 10.5, 14.0, 15.0, 14.5, 16.0};
         List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
         AbstractADM model = new ADM_MannKendall();
-        model.init(new AnomalyDetectionContext());
+        model.init(AnomalyDetectionContext.createDefault());
         model.checkCompatibility(indicatorSeries, log);
 
         IndicatorEvaluateInfo evaluate = model.evaluate(indicatorSeries, log);
@@ -70,7 +70,7 @@ public class ADMTest {
         JFreeChartUtil.drawScatterChart("TestADM_Quantile_Scatter", indicatorSeries);
 
         AbstractADM model = new ADM_Quantile();
-        model.init(new AnomalyDetectionContext());
+        model.init(AnomalyDetectionContext.createDefault());
         model.checkCompatibility(indicatorSeries, log);
 
         IndicatorEvaluateInfo evaluate = model.evaluate(indicatorSeries, log);
@@ -97,7 +97,7 @@ public class ADMTest {
         };
         List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
         AbstractADM model = new ADM_ZScore();
-        model.init(new AnomalyDetectionContext());
+        model.init(AnomalyDetectionContext.createDefault());
         model.checkCompatibility(indicatorSeries, log);
 
         IndicatorEvaluateInfo evaluate = model.evaluate(indicatorSeries, log);
