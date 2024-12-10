@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 /**
  * Anomaly detection model: Based on abnormal detection of volatility fluctuations
+ *
  * @author mym
  */
 public class ADM_2ndDerivationMBP extends AbstractADM {
@@ -28,6 +29,12 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
      * 2nd derivation threshold, filter then get significance anomaly candidate points.
      */
     private double thresholdFactor;
+    /**
+     * Evaluate algorithm types:
+     * <br>1. Distribution by volatility. That is, looking for anomalies based on the volatility distribution of the data
+     * <br>2. By absolute volatility. That is, the point at which volatility outliers are found is the volatility point
+     */
+    private int evaluateType;
 
     public ADM_2ndDerivationMBP() {
         super(AnomalyDictType.MODEL_ADM_2ndDerivationMBP, AnomalyDictType.TYPE_FLUCTUATION);
@@ -36,12 +43,18 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
     @Override
     public void init(AnomalyDetectionContext context) {
         this.minPoints = 3;
-        this.thresholdFactor = Double.parseDouble((String)context.getConfig(ADMConfigs.ADM_2ED_DERIVATION_MBP_THRESHOLD_FACTOR));
+        this.thresholdFactor = Double.parseDouble((String) context.getConfig(ADMConfigs.ADM_2ED_DERIVATION_MBP_THRESHOLD_FACTOR));
+        this.evaluateType = Integer.parseInt((String) context.getConfig(ADMConfigs.ADM_2ED_DERIVATION_MBP_EVALUATE_TYPE));
     }
 
     @Override
     public IndicatorEvaluateInfo evaluate(List<IndicatorSeries> indicatorSeries, AnomalyDetectionLog log) {
-        List<IndicatorSeries> anomalyList = evaluateWithVolatilityThreshold(indicatorSeries);
+        List<IndicatorSeries> anomalyList = null;
+        if (this.evaluateType == 1) {
+            anomalyList = evaluateWithVolatilityThreshold(indicatorSeries);
+        } else if (this.evaluateType == 2) {
+            anomalyList = evaluateWithQuantile(indicatorSeries);
+        }
 
         IndicatorEvaluateInfo result = buildDefaultEvaluateInfo();
         if (CollectionUtil.isNotEmpty(anomalyList)) {
@@ -65,7 +78,9 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
         return true;
     }
 
-    /** Through volatility threshold evaluate anomaly points
+    /**
+     * Through volatility threshold evaluate anomaly points
+     *
      * @param data
      * @return {@link List}<{@link IndicatorSeries}>
      */
@@ -74,7 +89,7 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
         double[] volatility = calculateVolatility(data.stream().mapToDouble(IndicatorSeries::getValue).toArray());
 
         // volatility to distribution points
-        double[][] distributionPoints = transferToDistributionPoints(volatility, 100);
+        double[][] distributionPoints = transferToDistributionPoints(volatility, 100, thresholdFactor);
         double[] x = distributionPoints[0];
         double[] y = distributionPoints[1];
 
@@ -86,29 +101,50 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
         double minBound = x[inflectionPoints[0]];
         double maxBound = x[inflectionPoints[1]];
 
-        // lowerBound-upperBound filter
+        // lowerBound-upperBound filter result
         List<IndicatorSeries> anomalyList = new ArrayList<>();
+        int continualMaxIndex = -1;
+        int continualLastIndex = -1;
         for (int i = 0; i < volatility.length; i++) {
-            if(volatility[i] > maxBound || volatility[i] < minBound){
-                anomalyList.add(data.get(i));
+            if (volatility[i] > maxBound || volatility[i] < minBound) {
+                // continual isotropic volatilises, select the largest
+                if (continualLastIndex < 0) {
+                    continualMaxIndex = i;
+                    continualLastIndex = i;
+                } else if (i - 1 == continualLastIndex && volatility[i] * volatility[continualLastIndex] > 0) {
+                    if (Math.abs(volatility[i]) > Math.abs(volatility[continualMaxIndex])) {
+                        continualMaxIndex = i;
+                    }
+                    continualLastIndex = i;
+                } else {
+                    anomalyList.add(data.get(continualMaxIndex));
+                    continualLastIndex = i;
+                    continualMaxIndex = i;
+                }
             }
         }
+        if (continualMaxIndex >= 0) {
+            anomalyList.add(data.get(continualMaxIndex));
+        }
+
         return anomalyList;
     }
 
-    /** Through volatility quantile to evaluate anomaly points
+    /**
+     * Through volatility quantile to evaluate anomaly points
+     *
      * @param data
      * @return {@link List}<{@link IndicatorSeries}>
      */
     private List<IndicatorSeries> evaluateWithQuantile(List<IndicatorSeries> data) {
         double[] volatility = calculateVolatility(data.stream().mapToDouble(IndicatorSeries::getValue).toArray());
         // lowerBound-upperBound filter
-        double[] quantileIQR = IndicatorCalculateUtil.quantileBound(IndicatorSeriesUtil.transferFromArray(volatility), this.thresholdFactor, 0.25, 0.75);
+        double[] quantileIQR = IndicatorCalculateUtil.quantileBound(IndicatorSeriesUtil.transferFromArray(volatility), this.thresholdFactor * 1, 0.25, 0.75);
         double lowerBound = quantileIQR[0];
         double upperBound = quantileIQR[1];
         List<IndicatorSeries> anomalyList = new ArrayList<>();
         for (int i = 0; i < volatility.length; i++) {
-            if(volatility[i] > upperBound || volatility[i] < lowerBound){
+            if (volatility[i] > upperBound || volatility[i] < lowerBound) {
                 anomalyList.add(data.get(i));
             }
         }
@@ -124,9 +160,9 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
         return volatility;
     }
 
-    public double[][] transferToDistributionPoints(double[] data, int points) {
+    public double[][] transferToDistributionPoints(double[] data, int points, double bandwidthFactor) {
         double[] copyData = Arrays.copyOf(data, data.length);
-        KernelDensity volatilityDistribution = new KernelDensity(copyData, BandwidthUtil.calculateBandwidth(copyData));
+        KernelDensity volatilityDistribution = new KernelDensity(copyData, bandwidthFactor * BandwidthUtil.calculateBandwidth(copyData));
 
         double min = Arrays.stream(copyData).min().orElse(0.0);
         double max = Arrays.stream(copyData).max().orElse(1.0);
@@ -179,15 +215,15 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
             // A change in sign could be an inflection point
             if (secondDerivative[i - 1] * secondDerivative[i] < 0) {
                 double distance = Math.sqrt(Math.pow(distributionX[i], 2) + Math.pow(distributionY[i], 2));
-                if(distributionX[i] >= 0){
+                if (distributionX[i] >= 0) {
                     // zero axis right
-                    if(distance >= xAxisRightMBPMaxDistance){
+                    if (distance >= xAxisRightMBPMaxDistance) {
                         xAxisRightMBPIndex = i;
                         xAxisRightMBPMaxDistance = distance;
                     }
                 } else {
                     // zero axis left
-                    if(distance >= xAxisLeftMBPMaxDistance){
+                    if (distance >= xAxisLeftMBPMaxDistance) {
                         xAxisLeftMBPIndex = i;
                         xAxisLeftMBPMaxDistance = distance;
                     }

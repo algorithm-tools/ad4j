@@ -31,7 +31,7 @@ public class ADMTest {
     public void testADM_2ndDerivationMBP(){
         double[] data = {10.0, 12.0, 85.0, 70, 100.0, 14.0, 14.0, 12.0, 40, 20, 20};
 //        List<IndicatorSeries> indicatorSeries = IndicatorSeriesUtil.transferFromArray(data);
-        List<IndicatorSeries> indicatorSeries = parseData(null);
+        List<IndicatorSeries> indicatorSeries = parseData("[{\"logicalIndex\":\"0\",\"time\":0,\"value\":1104.0},{\"logicalIndex\":\"1\",\"time\":1,\"value\":976.0},{\"logicalIndex\":\"2\",\"time\":2,\"value\":949.0},{\"logicalIndex\":\"3\",\"time\":3,\"value\":895.0},{\"logicalIndex\":\"4\",\"time\":4,\"value\":810.0},{\"logicalIndex\":\"5\",\"time\":5,\"value\":975.0},{\"logicalIndex\":\"6\",\"time\":6,\"value\":1152.0},{\"logicalIndex\":\"7\",\"time\":7,\"value\":818.0},{\"logicalIndex\":\"8\",\"time\":8,\"value\":766.0},{\"logicalIndex\":\"9\",\"time\":9,\"value\":502.0},{\"logicalIndex\":\"10\",\"time\":10,\"value\":396.0},{\"logicalIndex\":\"11\",\"time\":11,\"value\":468.0},{\"logicalIndex\":\"12\",\"time\":12,\"value\":592.0},{\"logicalIndex\":\"13\",\"time\":13,\"value\":769.0}]");
         JFreeChartUtil.drawLineChart("testADM_2ndDerivationMBP", indicatorSeries);
 
         AbstractADM model = new ADM_2ndDerivationMBP();

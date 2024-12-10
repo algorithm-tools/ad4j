@@ -5,7 +5,7 @@ import org.algorithmtools.ad4j.utils.IndicatorSeriesUtil;
 import org.algorithmtools.chart.JFreeChartUtil;
 import smile.stat.distribution.KernelDensity;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Test Volatility Anomaly
@@ -14,7 +14,8 @@ public class VolatilityAnalysisTest {
 
     public static void main(String[] args) {
 //        double[] data = {10.0, 12.0, 85.0, 70.0, 100.0, 14.0, 14.0, 12.0, 40.0, 20.0};
-        double[] data = {45.29, 30.85, 40.23, 15.57, 13.14, 32.53, 44.34, 33.92, 25.31, 31.12, 33.23, 40.65, 32.88, 31.14};
+//        double[] data = {45.29, 30.85, 40.23, 15.57, 13.14, 32.53, 44.34, 33.92, 25.31, 31.12, 33.23, 40.65, 32.88, 31.14};
+        double[] data = {1104.0, 976.0, 949.0, 895.0, 810.0, 975.0, 1152.0, 818.0, 766.0, 502.0, 396.0, 468.0, 592.0, 769.0};
         JFreeChartUtil.drawLineChart("data", IndicatorSeriesUtil.transferFromArray(data));
 
         // volatility
@@ -50,7 +51,7 @@ public class VolatilityAnalysisTest {
     }
 
     public static double[][] transferToDistributionPoints(double[] data, int points) {
-        KernelDensity volatilityDistribution = new KernelDensity(data, BandwidthUtil.calculateBandwidth(data));
+        KernelDensity volatilityDistribution = new KernelDensity(data, BandwidthUtil.calculateBandwidth(data) * 1);
 
         double min = Arrays.stream(data).min().orElse(0.0);
         double max = Arrays.stream(data).max().orElse(1.0);
@@ -123,10 +124,31 @@ public class VolatilityAnalysisTest {
     }
 
     public static void checkAnomalies(double[] data, double[] volatility, double minBound, double maxBound) {
+        Map<Integer, Double> anomalyList = new HashMap<>();
+        int continualMaxIndex = -1;
+        int continualLastIndex = -1;
         for (int i = 0; i < volatility.length; i++) {
             if(volatility[i] > maxBound || volatility[i] < minBound){
-                System.out.println("anomaly:" + i + " --> " + data[i]);
+                // continual isotropic volatilises, select the largest
+                if(continualLastIndex < 0){
+                    continualMaxIndex = i;
+                    continualLastIndex = i;
+                } else if(i - 1 == continualLastIndex && volatility[i] * volatility[continualLastIndex] > 0){
+                    if(Math.abs(volatility[i]) > Math.abs(volatility[continualMaxIndex])){
+                        continualMaxIndex = i;
+                    }
+                    continualLastIndex = i;
+                } else {
+                    anomalyList.put(continualMaxIndex, data[continualMaxIndex]);
+                    continualLastIndex = i;
+                    continualMaxIndex = i;
+                }
             }
         }
+        if(continualMaxIndex >= 0){
+            anomalyList.put(continualMaxIndex, data[continualMaxIndex]);
+        }
+
+        anomalyList.forEach((k,v) -> System.out.println("anomaly:" + k + " --> " + v));
     }
 }

@@ -25,7 +25,10 @@ public class ADMConfigs {
 
     //==================ADM 2ndDerivationMBP Options=================//
     public static final ConfigOption<Boolean> ADM_2ED_DERIVATION_MBP_USE = new ConfigOption<>("adm.2nd_derivation_mbp.use", true, "Open 2ndDerivationMBP detection function.");
-    public static final ConfigOption<Double> ADM_2ED_DERIVATION_MBP_THRESHOLD_FACTOR = new ConfigOption<>("adm.2nd_derivation_mbp.threshold_factor", 1.5, "2nd derivation threshold factor, filter then get significance anomaly candidate points.");
+    public static final ConfigOption<Double> ADM_2ED_DERIVATION_MBP_THRESHOLD_FACTOR = new ConfigOption<>("adm.2nd_derivation_mbp.threshold_factor", 1.0, "2nd derivation threshold factor, Regulates the robustness of the evaluation algorithm, the smaller it is, the less robust it is and the more sensitive it is.");
+    public static final ConfigOption<Integer> ADM_2ED_DERIVATION_MBP_EVALUATE_TYPE = new ConfigOption<>("adm.2nd_derivation_mbp.evaluate_type", 1, "2nd derivation evaluate type, Evaluate algorithm types:" +
+            "1. Distribution by volatility. That is, looking for anomalies based on the volatility distribution of the data" +
+            ";2. By absolute volatility. That is, the point at which volatility outliers are found is the volatility point.1 finer and more sensitive, 2. more robust. Both can be adjusted with adm.2nd_derivation_mbp.threshold_factor");
 
     //==================ADM MannKendall Options=================//
     public static final ConfigOption<Boolean> ADM_MANNKENDALL_USE = new ConfigOption<>("adm.mannkendall.use", true, "Open 2ndDerivationMBP detection function.");
