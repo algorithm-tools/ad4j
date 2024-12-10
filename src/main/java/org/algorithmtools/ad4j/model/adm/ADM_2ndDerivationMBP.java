@@ -49,7 +49,7 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
 
     @Override
     public IndicatorEvaluateInfo evaluate(List<IndicatorSeries> indicatorSeries, AnomalyDetectionLog log) {
-        List<IndicatorSeries> anomalyList = null;
+        List<AnomalyIndicatorSeries> anomalyList = null;
         if (this.evaluateType == 1) {
             anomalyList = evaluateWithVolatilityThreshold(indicatorSeries);
         } else if (this.evaluateType == 2) {
@@ -58,12 +58,8 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
 
         IndicatorEvaluateInfo result = buildDefaultEvaluateInfo();
         if (CollectionUtil.isNotEmpty(anomalyList)) {
-            double mean = indicatorSeries.stream().mapToDouble(IndicatorSeries::getValue).sum() / indicatorSeries.size();
-            List<AnomalyIndicatorSeries> mbpSeries = anomalyList.stream()
-                    .map(v -> new AnomalyIndicatorSeries(v.getValue() > mean ? AnomalyDictType.INFLUENCE_POSITIVE : AnomalyDictType.INFLUENCE_NEGATIVE, v))
-                    .collect(Collectors.toList());
             result.setHasAnomaly(true);
-            result.setAnomalySeriesList(mbpSeries);
+            result.setAnomalySeriesList(anomalyList);
             return result;
         }
         return result;
@@ -84,7 +80,7 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
      * @param data
      * @return {@link List}<{@link IndicatorSeries}>
      */
-    private List<IndicatorSeries> evaluateWithVolatilityThreshold(List<IndicatorSeries> data) {
+    private List<AnomalyIndicatorSeries> evaluateWithVolatilityThreshold(List<IndicatorSeries> data) {
         // volatility
         double[] volatility = calculateVolatility(data.stream().mapToDouble(IndicatorSeries::getValue).toArray());
 
@@ -101,8 +97,8 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
         double minBound = x[inflectionPoints[0]];
         double maxBound = x[inflectionPoints[1]];
 
-        // lowerBound-upperBound filter result
-        List<IndicatorSeries> anomalyList = new ArrayList<>();
+        // lowerBound-upperBound filter and transfer to result
+        List<AnomalyIndicatorSeries> anomalyList = new ArrayList<>();
         int continualMaxIndex = -1;
         int continualLastIndex = -1;
         for (int i = 0; i < volatility.length; i++) {
@@ -117,14 +113,14 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
                     }
                     continualLastIndex = i;
                 } else {
-                    anomalyList.add(data.get(continualMaxIndex));
+                    anomalyList.add(new AnomalyIndicatorSeries(volatility[continualMaxIndex] > 0 ? AnomalyDictType.INFLUENCE_POSITIVE : AnomalyDictType.INFLUENCE_NEGATIVE, data.get(continualMaxIndex)));
                     continualLastIndex = i;
                     continualMaxIndex = i;
                 }
             }
         }
         if (continualMaxIndex >= 0) {
-            anomalyList.add(data.get(continualMaxIndex));
+            anomalyList.add(new AnomalyIndicatorSeries(volatility[continualMaxIndex] > 0 ? AnomalyDictType.INFLUENCE_POSITIVE : AnomalyDictType.INFLUENCE_NEGATIVE, data.get(continualMaxIndex)));
         }
 
         return anomalyList;
@@ -136,16 +132,16 @@ public class ADM_2ndDerivationMBP extends AbstractADM {
      * @param data
      * @return {@link List}<{@link IndicatorSeries}>
      */
-    private List<IndicatorSeries> evaluateWithQuantile(List<IndicatorSeries> data) {
+    private List<AnomalyIndicatorSeries> evaluateWithQuantile(List<IndicatorSeries> data) {
         double[] volatility = calculateVolatility(data.stream().mapToDouble(IndicatorSeries::getValue).toArray());
         // lowerBound-upperBound filter
         double[] quantileIQR = IndicatorCalculateUtil.quantileBound(IndicatorSeriesUtil.transferFromArray(volatility), this.thresholdFactor * 1, 0.25, 0.75);
         double lowerBound = quantileIQR[0];
         double upperBound = quantileIQR[1];
-        List<IndicatorSeries> anomalyList = new ArrayList<>();
+        List<AnomalyIndicatorSeries> anomalyList = new ArrayList<>();
         for (int i = 0; i < volatility.length; i++) {
             if (volatility[i] > upperBound || volatility[i] < lowerBound) {
-                anomalyList.add(data.get(i));
+                anomalyList.add(new AnomalyIndicatorSeries(volatility[i] > 0 ? AnomalyDictType.INFLUENCE_POSITIVE : AnomalyDictType.INFLUENCE_NEGATIVE, data.get(i)));
             }
         }
         return anomalyList;
