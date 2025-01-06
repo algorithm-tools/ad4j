@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=socialflat-square&)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Total Lines](https://img.shields.io/github/stars/algorithm-tools/ad4j?style=socialflat-square&label=stars)](https://github.com/algorithm-tools/ad4j/stargazers)
+[![Release](https://jitpack.io/v/algorithm-tools/ad4j.svg)](https://jitpack.io/#algorithm-tools/ad4j)
 [![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg?style=socialflat-square&)](README_zh_CN.md)
 [![EN doc](https://img.shields.io/badge/document-English-blue.svg?style=socialflat-square&)](README.md)
 
@@ -40,16 +41,22 @@ mvn clean install -Dmaven.test.skip=true
 The build requires JDK 8 or later.
 
 ## Using ad4j
-- add to maven pom:
+- You can bring in the source code or by maven. Add to maven pom:
 ```xml
-<dependency>
-    <groupId>org.algorithmtools</groupId>
-    <artifactId>ad4j</artifactId>
-    <version>${version}</version>
-    <scope>system</scope>
-    <systemPath>${project.basedir}/lib/ad4j-${version}.jar</systemPath>
-</dependency>
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
 
+<dependencies>
+  <dependency>
+    <groupId>com.github.algorithm-tools</groupId>
+    <artifactId>ad4j</artifactId>
+    <version>1.0.0</version>
+  </dependency>
+</dependencies>
 ```
 - business use:
 `BizUseExample`
