@@ -39,8 +39,14 @@ public class AnomalyDetectionContext implements Serializable {
     }
 
     public void putConfig(ConfigOption configOption, Object value){
-        admConfigMap.put(configOption,
-                (value instanceof BigDecimal || value instanceof Double || value instanceof Float || value instanceof Integer) ? value.toString() : value);
+        if(value != null && value.toString().endsWith("s")){
+            // end with "s", then sensitivityConvert
+            String sensitivityValue = value.toString();
+            admConfigMap.put(configOption,sensitivityConvert(configOption, sensitivityValue.substring(0, sensitivityValue.length() - 1)));
+        } else {
+            admConfigMap.put(configOption,
+                    (value instanceof BigDecimal || value instanceof Double || value instanceof Float || value instanceof Integer) ? value.toString() : value);
+        }
     }
 
     public Object getConfig(String key){
@@ -107,6 +113,67 @@ public class AnomalyDetectionContext implements Serializable {
         for (Map.Entry<String, ConfigOption> entry : ADMConfigs.configKeyMap.entrySet()) {
             anomalyDetectionContext.putConfig(entry.getValue(), entry.getValue().getDefaultValue());
         }
+    }
+
+    /**
+     * Some anomaly model support the specification of configuration values in the form of sensitivities. If not support, return config default value.
+     *
+     * @param config
+     * @param sensitivity 0.1-> low sensitivity; 0.05-> normal sensitivity; 0.01-> high sensitivity
+     * @return config value
+     */
+    public static String sensitivityConvert(ConfigOption config, String sensitivity) {
+        if (config == null) {
+            return null;
+        }
+        if (config.getKey().equals(ADMConfigs.ADM_QUANTILE_IQR_MULTIPLIER.getKey())) {
+            if ("0.1".equals(sensitivity)) {
+                return "3.0"; // confidence level 90% (more bigger then detection more less)
+            } else if ("0.05".equals(sensitivity)) {
+                return "1.5"; // confidence level 95%
+            } else if ("0.01".equals(sensitivity)) {
+                return "1.0"; // confidence level 99%
+            }
+        }
+        if (config.getKey().equals(ADMConfigs.ADM_ZSCORE_THRESHOLD.getKey())) {
+            if ("0.1".equals(sensitivity)) {
+                return "1.5"; // confidence level 86.6% (more bigger then detection more less)
+            } else if ("0.05".equals(sensitivity)) {
+                return "2.0"; // confidence level 95%
+            } else if ("0.01".equals(sensitivity)) {
+                return "3.0"; // confidence level 99.7%
+            }
+        }
+        if (config.getKey().equals(ADMConfigs.ADM_GESD_ALPHA.getKey())) {
+            if ("0.1".equals(sensitivity)) {
+                return "0.1"; // confidence level 90% (more bigger then detection more less)
+            } else if ("0.05".equals(sensitivity)) {
+                return "0.05"; // confidence level 95%
+            } else if ("0.01".equals(sensitivity)) {
+                return "0.01"; // confidence level 99%
+            }
+        }
+        if (config.getKey().equals(ADMConfigs.ADM_2ED_DERIVATION_MBP_THRESHOLD_FACTOR.getKey())) {
+            // only support when ADM_2ED_DERIVATION_MBP_EVALUATE_TYPE = 1
+            if ("0.1".equals(sensitivity)) {
+                return "3.0"; // fitting 99.7%(more bigger then detection more less)
+            } else if ("0.05".equals(sensitivity)) {
+                return "2.0"; // fitting 95%
+            } else if ("0.01".equals(sensitivity)) {
+                return "1.5"; // fitting 86.6%
+            }
+        }
+        if (config.getKey().equals(ADMConfigs.ADM_MANNKENDALL_CRITICALZ.getKey())) {
+            if ("0.1".equals(sensitivity)) {
+                return "1.64"; // confidence level 90% (more bigger then detection more less)
+            } else if ("0.05".equals(sensitivity)) {
+                return "1.96"; // confidence level 95%
+            } else if ("0.01".equals(sensitivity)) {
+                return "2.58"; // confidence level 99%
+            }
+        }
+
+        return String.valueOf(config.getDefaultValue());
     }
 
 
