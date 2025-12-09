@@ -45,6 +45,10 @@ public class ADMConfigs {
     //==================ADM Threshold-Rule Options=================//
     public static final ConfigOption<Boolean> ADM_THRESHOLD_RULE_USE = new ConfigOption<>("adm.threshold_rule.use", false, "Open threshold rule detection function.");
     public static final ConfigOption<ThresholdRuleBase> ADM_THRESHOLD_RULE_SET = new ConfigOption<>("adm.threshold_rule.set", null, "Threshold rule detection sets.");
+    /*
+     * Relation to the outer layer(GESD\Quantile\Z-score...)
+     */
+    public static final ConfigOption<String> ADM_THRESHOLD_RULE_OUTER_LAYER_LOGIC = new ConfigOption<>("adm.threshold_rule.outer_layer_logic", "OR", "Threshold rule with relation to the outer layer.");
 
 
     static {

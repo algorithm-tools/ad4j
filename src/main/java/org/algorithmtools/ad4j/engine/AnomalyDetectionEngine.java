@@ -2,6 +2,7 @@ package org.algorithmtools.ad4j.engine;
 
 import org.algorithmtools.ad4j.config.ADMConfigs;
 import org.algorithmtools.ad4j.enumtype.AnomalyDictType;
+import org.algorithmtools.ad4j.enumtype.LogicType;
 import org.algorithmtools.ad4j.model.adm.*;
 import org.algorithmtools.ad4j.pojo.*;
 import org.algorithmtools.ad4j.utils.CollectionUtil;
@@ -73,12 +74,18 @@ public class AnomalyDetectionEngine {
 
         AnomalyDetectionResult detectionResult = new AnomalyDetectionResult(indicatorInfo);
         for (Map.Entry<AnomalyDictType, AbstractADM> admEntry : admMap.entrySet()) {
-            LOGGER.info("anomaly detect, [{}] processing.", admEntry.getKey());
             IndicatorEvaluateInfo evaluateResult = evaluate(admEntry.getValue(), indicatorInfo.getIndicatorSeries());
+            LOGGER.info("anomaly detect, [{}] process over.", admEntry.getKey());
+            if(admEntry.getKey() == AnomalyDictType.MODEL_ADM_ThresholdRule
+                    && LogicType.parse((String) context.getConfig(ADMConfigs.ADM_THRESHOLD_RULE_OUTER_LAYER_LOGIC)) == LogicType.AND
+                    && !evaluateResult.isHasAnomaly()
+            ){
+                break;
+            }
             if(evaluateResult.isHasAnomaly()){
                 detectionResult.addIndicatorEvaluateInfo(evaluateResult.getAnomalyType(), evaluateResult);
+                detectionResult.addIndicatorAnomalyMap(evaluateResult);
             }
-            LOGGER.info("anomaly detect, [{}] process over.", admEntry.getKey());
         }
 
         return detectionResult;
